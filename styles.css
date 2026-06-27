@@ -1,0 +1,669 @@
+/* Global Styling Variables */
+:root {
+    --primary-color: #0070f3; /* Engineering Blue */
+    --text-main: #111111;
+    --text-muted: #555555;
+    --bg-light: #f7f9fa;
+    --bg-white: #ffffff;
+    --navbar-bg: #0f172a; /* Sleek Deep Slate */
+    --scroll-behavior: smooth; /* Smooth transitions across navigation anchor tags */
+}
+
+/* Reset Defaults */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--text-main);
+    background-color: var(--bg-light);
+    line-height: 1.6;
+}
+
+/* Navigation Menu - Glassmorphism Engineering Style */
+header {
+    background-color: rgba(15, 23, 42, 0.9); /* Transparent Deep Slate */
+    backdrop-filter: blur(12px); /* Blurred glass effect */
+    -webkit-backdrop-filter: blur(12px);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.3s ease;
+}
+
+/* Scroll Active State (Triggered by JavaScript) */
+header.scroll-active {
+    background-color: #0f172a; /* Solid dark color when scrolling */
+    border-bottom: 2px solid var(--primary-color); /* Electrical blue accent line */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    padding: -0.2rem 0; /* Shrinks the navbar slightly on scroll */
+}
+
+.navbar {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 2rem;
+    transition: padding 0.3s ease;
+}
+
+header.scroll-active .navbar {
+    padding: 0.9rem 2rem; /* Smooth size transformation */
+}
+
+.logo {
+    color: #ffffff;
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    text-transform: uppercase;
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
+.logo span {
+    color: var(--primary-color);
+    position: relative;
+}
+
+/* Subtle circuit node dot indicator over the logo name */
+.logo span::after {
+    content: '';
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    background-color: #059669; /* Battery Green Node */
+    border-radius: 50%;
+    top: -2px;
+    right: -7px;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 2.2rem;
+}
+
+.nav-links a {
+    color: #94a3b8; /* Muted Slate */
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    transition: all 0.2s ease;
+    position: relative;
+    padding: 0.4rem 0;
+}
+
+/* Interactive sliding circuit line indicator below links on hover */
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--primary-color);
+    transition: width 0.2s ease;
+}
+
+.nav-links a:hover {
+    color: #ffffff;
+}
+
+.nav-links a:hover::after {
+    width: 100%;
+}
+
+/* Hero Banner Layout */
+.hero-section {
+    padding: 11rem 2rem 6rem; /* Keeps exactly 11rem of safety space at the top */
+    background-color: var(--bg-white);
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+.hero-container {
+    max-width: 800px;
+}
+
+.hero-subtitle {
+    color: var(--primary-color);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 1.5px;
+    margin-bottom: 1rem;
+}
+
+.hero-title {
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -1px;
+    margin-bottom: 1.5rem;
+}
+
+.hero-description {
+    font-size: 1.15rem;
+    color: var(--text-muted);
+    margin-bottom: 2.5rem;
+}
+
+/* Standard Buttons */
+.hero-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.btn {
+    display: inline-block;
+    padding: 0.8rem 1.8rem;
+    font-weight: 600;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: #ffffff;
+}
+
+.btn-primary:hover {
+    background-color: #0051b3;
+}
+
+.btn-secondary {
+    background-color: #e2e8f0;
+    color: #334155;
+}
+
+.btn-secondary:hover {
+    background-color: #cbd5e1;
+}
+
+/* Sections Structure */
+.about-section, .apps-section, .contact-section {
+    padding: 6rem 2rem;
+}
+
+.section-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.5px;
+}
+
+.section-subtitle {
+    color: var(--text-muted);
+    margin-bottom: 3rem;
+}
+
+/* Placeholder Application Card */
+/* Updated App Layout Grid */
+.apps-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+/* Custom Alternative Badge Colors */
+.card-badge.bg-battery {
+    background-color: #ecfdf5;
+    color: #059669; /* Battery Green Accent */
+}
+
+.btn-battery {
+    background-color: #059669;
+}
+
+.btn-battery:hover {
+    background-color: #047857;
+}
+
+.placeholder-card {
+    background-color: var(--bg-white);
+    border: 2px dashed #cbd5e1;
+    border-radius: 8px;
+    padding: 3rem;
+    max-width: 450px;
+    width: 100%;
+}
+
+.placeholder-card h3 {
+    margin-bottom: 0.5rem;
+    color: #64748b;
+}
+
+/* Footer Section */
+footer {
+    background-color: var(--navbar-bg);
+    color: #64748b;
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.9rem;
+}
+/* Calculator Grid & Layout Styling */
+.calculation-card {
+    background-color: var(--bg-white);
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 2.5rem;
+    max-width: 600px;
+    width: 100%;
+    text-align: left;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.app-card-header h3 {
+    font-size: 1.4rem;
+    color: var(--navbar-bg);
+    margin-bottom: 0.25rem;
+}
+
+.card-subtitle {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+}
+
+/* Forms and Typography Blocks */
+.engineering-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    flex: 1;
+}
+
+.form-group label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #334155;
+}
+
+.form-group-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--primary-color);
+    margin-top: 0.5rem;
+}
+
+/* Custom Interactive Intputs */
+.eng-input, .eng-select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.eng-input:focus, .eng-select:focus {
+    border-color: var(--primary-color);
+}
+
+.ambient-style {
+    background-color: #fffbeb;
+    border-color: #fef3c7;
+}
+
+.ambient-style:focus {
+    border-color: #d97706;
+}
+
+.form-twin-row, .form-triple-row {
+    display: flex;
+    gap: 1rem;
+}
+
+/* Button & Calculation Outputs */
+.btn-calc {
+    background-color: var(--navbar-bg);
+    color: #ffffff;
+    width: 100%;
+    border: none;
+    cursor: pointer;
+    padding: 1rem;
+    margin-top: 0.5rem;
+}
+
+.btn-calc:hover {
+    background-color: var(--primary-color);
+}
+
+.results-display {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background-color: #f8fafc;
+    border-left: 4px solid var(--primary-color);
+    border-radius: 4px;
+}
+
+.results-display h4 {
+    margin-bottom: 1rem;
+    color: var(--navbar-bg);
+}
+
+.result-metric {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.result-metric:last-child {
+    border-bottom: none;
+}
+
+.text-alert {
+    color: #b91c1c;
+}
+
+.hidden {
+    display: none;
+}
+/* App Link Card Styling Layout */
+.app-link-card {
+    background-color: var(--bg-white);
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 2.5rem;
+    max-width: 500px;
+    width: 100%;
+    text-align: left;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    position: relative;
+}
+
+.card-badge {
+    display: inline-block;
+    background-color: #e0f2fe;
+    color: var(--primary-color);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.25rem 0.75rem;
+    border-radius: 50px;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+}
+
+.app-link-card h3 {
+    font-size: 1.4rem;
+    color: var(--navbar-bg);
+    margin-bottom: 0.75rem;
+}
+
+.app-link-card p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 2rem;
+    line-height: 1.5;
+}
+
+.btn-app-link {
+    background-color: var(--primary-color);
+    color: #ffffff;
+    display: block;
+    text-align: center;
+    border: none;
+}
+
+.btn-app-link:hover {
+    background-color: var(--navbar-bg);
+}
+/* Navigation Link Back to Home */
+.nav-control-header {
+    width: 100%;
+    max-width: 390px;
+    margin: 15px auto 12px;
+    text-align: left;
+    padding: 0 10px;
+}
+
+.back-home-link {
+    display: inline-block;
+    color: #1a759f; /* Transformer Blue theme color */
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 6px 12px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(26, 117, 159, 0.3);
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.back-home-link:hover {
+    background-color: #1a759f;
+    color: #ffffff;
+    border-color: #1a759f;
+    box-shadow: 0 2px 8px rgba(26, 117, 159, 0.2);
+}
+/* Professional Background Component Layout */
+.text-left-align {
+    text-align: left !important;
+}
+
+.section-intro {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    margin-bottom: 3rem;
+    max-width: 900px;
+}
+
+.about-flex-layout {
+    display: flex;
+    gap: 3.5rem;
+    flex-wrap: wrap;
+}
+
+.about-column {
+    flex: 1;
+    min-width: 300px;
+}
+
+.about-column h3 {
+    font-size: 1.3rem;
+    color: var(--navbar-bg);
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 0.5rem;
+}
+
+/* Competency Grid Badges */
+.skills-tags-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.skills-tags-list li {
+    background-color: #f1f5f9;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #334155;
+    border-left: 3px solid var(--primary-color);
+}
+
+/* Professional Timeline Nodes */
+.timeline-item {
+    margin-bottom: 1.75rem;
+    padding-left: 1rem;
+    border-left: 2px solid #cbd5e1;
+}
+
+.timeline-item h4 {
+    font-size: 1.1rem;
+    color: var(--navbar-bg);
+}
+
+.company-sub {
+    font-size: 0.85rem;
+    color: var(--primary-color);
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+}
+
+.role-desc {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+/* Interactive Contact Form Styling and Layouts */
+.portfolio-contact-form {
+    max-width: 650px;
+    margin: 0 auto;
+    text-align: left;
+    background-color: var(--bg-white);
+    padding: 2.5rem;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04);
+}
+
+.form-row-twin {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.25rem;
+}
+
+.form-input-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    flex: 1;
+    min-width: 250px;
+    margin-bottom: 1.25rem;
+}
+
+.form-input-block label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #334155;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.form-input-block input, .form-input-block textarea {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.form-input-block input:focus, .form-input-block textarea:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(0, 112, 243, 0.1);
+}
+
+.btn-form-submit {
+    width: 100%;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    padding: 1rem;
+    font-size: 1rem;
+}
+/* Professional Mobile Responsiveness Patch */
+@media (max-width: 768px) {
+    /* Stack the profile columns vertically on mobile */
+    .about-flex-layout {
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    /* Keep the profile headshot centered on small viewports */
+    .profile-photo-wrapper {
+        justify-content: center;
+        margin-bottom: 1rem;
+    }
+
+    /* Add side spacing inside the contact form for mobile edges */
+    .portfolio-contact-form {
+        padding: 1.5rem;
+    }
+
+    /* Stack twin inputs on top of each other on mobile phones */
+    .form-row-twin {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    /* Shrink large hero title fonts slightly so they don't break lines awkwardly */
+    .hero-title {
+        font-size: 2.2rem;
+    }
+}
+.form-input-block input:focus, 
+.form-input-block textarea:focus {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 4px rgba(0, 112, 243, 0.15) !important;
+    background-color: #ffffff;
+}
+/* Top Layout Intro Alignment */
+.profile-intro-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 2.5rem;
+}
+
+.profile-intro-row .section-intro {
+    margin-bottom: 0; /* Clear previous margin spacing so it aligns with the photo center */
+    flex: 1;
+}
+
+.profile-photo-wrapper {
+    flex-shrink: 0; /* Prevents the image container from squeezing */
+}
+
+.profile-inline-image {
+    width: 140px;              
+    height: 140px;
+    object-fit: cover;         
+    border-radius: 50%;        
+    border: 3px solid #ffffff;
+    box-shadow: 0 4px 15px rgba(15, 23, 42, 0.12);
+}
+
+/* Ensure bottom columns sit nicely below the top intro row */
+.about-flex-layout {
+    display: flex;
+    gap: 3.5rem;
+    flex-wrap: wrap;
+}

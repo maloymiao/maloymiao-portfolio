@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>BatterySizingCalculatorV2</title>
+    <link rel="stylesheet" href="./battery-style.css">
+
+  </head>
+    
+  <body>
+  <!-- Forced Priority Screen Layout Link with High Contrast Color -->
+<div class="nav-control-header" style="position: fixed !important; top: 20px !important; left: 20px !important; z-index: 999999 !important; width: auto !important; background: transparent !important;">
+    <a href="index.html" class="back-home-link" style="font-family: 'Nunito', sans-serif !important; font-size: 16px !important; font-weight: 700 !important; color: #ffffff !important; text-decoration: underline !important;">&larr; Back to Portfolio Home</a>
+</div>
+
+    <div class="phone">
+        <!-- The rest of your battery app code stays here -->
+
+
+  <link rel="stylesheet" href="https://cloudflare.com">
+<div class="calculator-container">
+  <h2 style="display: flex; align-items: center; gap: 10px;">
+  <!-- Custom Logo Image Layout -->
+  <img src="my-battery-logo.png" alt="Lead-Acid Battery Logo" style="width: 32px; height: 32px; object-fit: contain; flex-shrink: 0;">
+  Engine Starter Battery Sizing Calculator
+</h2>
+  
+    <!-- Section 0: Project Details Header -->
+  <fieldset class="project-details-section">
+    <legend>Project Identification</legend>
+    <div class="input-row">
+      <label for="project-name">Project Title Name:</label>
+      <input type="text" id="project-name" placeholder="e.g. Generator Room B Standby System">
+    </div>
+  </fieldset>
+
+  <!-- Section 1: Correction Factors -->
+  <fieldset>
+    <legend>Correction Factors</legend>
+    <div class="input-row">
+      <label for="soc">a) Battery State of Charge:</label>
+      <input type="number" id="soc" placeholder="1.3" step="0.01">
+    </div>
+    <div class="input-row">
+      <label for="duration">b) Cranking Duration:</label>
+      <input type="number" id="duration" placeholder="1.15" step="0.01">
+    </div>
+    <div class="input-row">
+      <label for="efficiency">c) Starting Circuit Efficiency:</label>
+      <input type="number" id="efficiency" placeholder="1.2" step="0.01">
+    </div>
+  </fieldset>
+
+  <!-- Section 2: Engine Specs -->
+  <fieldset>
+    <legend>Data Available for Engine</legend>
+    <div class="input-row">
+      <label for="voltage">Starter Motor Voltage (DC V):</label>
+      <input type="number" id="voltage" placeholder="24">
+    </div>
+    <div class="input-row">
+      <label for="rating">Starter Motor Rating (kW):</label>
+      <input type="number" id="rating" placeholder="8.9" step="0.1">
+    </div>
+    <div class="input-row">
+      <label for="starters">No. of Starters:</label>
+      <input type="number" id="starters" placeholder="2">
+    </div>
+  </fieldset>
+
+  <!-- Section 3: Auxiliary Loads -->
+  <fieldset>
+    <legend>Auxiliary Loads</legend>
+    <div class="input-row">
+      <label for="aux-load">Auxiliary Load (A):</label>
+      <input type="number" id="aux-load" placeholder="3">
+    </div>
+    <div class="input-row">
+      <label for="backup-time">Backup Time (H):</label>
+      <input type="number" id="backup-time" placeholder="4">
+    </div>
+  </fieldset>
+
+  <!-- Section 4: Battery Proposal -->
+  <fieldset>
+    <legend>Proposed Battery Configuration</legend>
+    <div class="input-row">
+      <label for="battery-model">Proposed Battery Model:</label>
+      <select id="battery-model">
+        <option value="XP800">XP800 (80Ah / 530CCA)</option>
+        <option value="XP1000">XP1000 (100Ah / 580CCA)</option>
+        <option value="XP1300" selected>XP1300 (130Ah / 720CCA)</option>
+        <option value="XP1500">XP1500 (150Ah / 785CCA)</option>
+        <option value="XP1700">XP1700 (170Ah / 900CCA)</option>
+        <option value="XP1800">XP1800 (180Ah / 1050CCA)</option>
+        <option value="XP2000">XP2000 (200Ah / 1150CCA)</option>
+        <option value="CUSTOM">-- Custom Battery Model --</option>
+      </select>
+    </div>
+    
+    <!-- Hidden by default, reveals only when "CUSTOM" is selected -->
+    <div id="custom-inputs-container" style="display: none; margin-top: 10px; border-top: 1px dashed #ddd; padding-top: 10px;">
+      <div class="input-row">
+        <label for="custom-ah">Custom Unit Capacity (Ah):</label>
+        <input type="number" id="custom-ah" placeholder="100" min="0">
+      </div>
+      <div class="input-row">
+        <label for="custom-cca">Custom Unit CCA (SAE):</label>
+        <input type="number" id="custom-cca" placeholder="600" min="0">
+      </div>
+    </div>
+    
+    <div class="input-row" style="margin-top: 10px;">
+      <label for="parallel-count">No. of Batteries (in Parallel):</label>
+      <input type="number" id="parallel-count" placeholder="2" min="1">
+    </div>
+  </fieldset>
+
+  <!-- Section 5: Calculation Summary Display & State Modifiers -->
+  
+  <!-- INSERTED: Validation Error Container -->
+  <div id="validation-error-box" class="error-state-box" style="display: none;">
+    ⚠️ <strong>Invalid Input Detected:</strong> Voltage, Number of Starters, and Number of Batteries must be greater than 0.
+  </div>
+
+  <!-- INSERTED: Empty Form Prompt Notice -->
+  <div id="form-empty-notice" class="empty-state-notice" style="display: none;">
+    💡 Please fill out the form input parameters above to view sizing results.
+  </div>
+
+  <div class="results-box">
+    <h3>Calculated Requirements</h3>
+    <p>Base Cranking Current: <span id="out-base-cranking">0</span> A</p>
+    <p>Cranking Current Req.: <span id="out-req-cranking">0</span> A</p>
+    <p>Total AH for Aux Load: <span id="out-req-aux">0</span> Ah</p>
+    
+    <h3>System Capabilities</h3>
+    <p>Total Available System CCA: <span id="out-sys-cca">0</span></p>
+    <p>Total Available System Ah: <span id="out-sys-ah">0</span></p>
+    <p>Total Quantity (12V Battery): <span id="out-qty">0</span></p>
+    
+    <div id="suitability-status" class="status-box">Calculating...</div>
+  </div>
+
+  <!-- ACTION BUTTONS: Kept inside the calculator-container card -->
+  <div class="action-btn-tray">
+    <button id="reset-btn" class="btn btn-reset">Reset Fields</button>
+    <button id="pdf-btn" class="btn btn-pdf">📄 Print PDF Report</button>
+  </div>
+      
+  <div class="print-only-footer">
+    <div class="footer-divider"></div>
+    <p class="footer-copyright">Battery Sizing Calculator © maloymiao</p>
+    <p class="footer-queries">Queries: <span class="email-link">maloymiao+batterysizing@gmail.com</span></p>
+    <p class="footer-disclaimer">This report is generated for preliminary battery sizing assessment reference only.</p>
+  </div>
+</div>
+    <script  src="./battery-script.js"></script>
+
+  </body>
+  
+</html>

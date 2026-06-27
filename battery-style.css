@@ -1,0 +1,384 @@
+/* Custom Theme Palette Configuration */
+:root {
+  --deep-blue-ocean: #0a3d62;
+  --ocean-gradient-start: #0c4a6e;
+  --ocean-gradient-end: #032b45;
+  --ocean-mist-bg: #f0f7fa;
+  --ocean-tray-bg: #e0f2fe;
+  --bermuda-grass: #2ecc71;
+  --morning-green-light: #e8f8f5;
+  --morning-green-text: #196f3d;
+  --soft-fail-bg: #fdf2f2;
+  --soft-fail-text: #9b2c2c;
+  --text-dark: #1e293b;
+  --border-mist: rgba(12, 74, 110, 0.15);
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, var(--ocean-gradient-start), var(--ocean-gradient-end));
+  background-attachment: fixed;
+  padding: 30px 20px;
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.calculator-container {
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+  max-width: 520px;
+  width: 100%;
+}
+
+h2 { 
+  text-align: center; 
+  color: var(--deep-blue-ocean); 
+  margin-top: 0;
+  margin-bottom: 25px; 
+  font-size: 24px;
+  font-weight: 700;
+}
+
+fieldset {
+  border: 1.5px solid var(--border-mist);
+  border-radius: 12px;
+  margin-bottom: 20px;
+  padding: 18px;
+  background-color: var(--ocean-mist-bg);
+}
+
+legend { 
+  font-weight: 700; 
+  color: var(--deep-blue-ocean); 
+  padding: 0 8px; 
+  font-size: 13px;
+  text-transform: uppercase;
+}
+
+.input-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+label { 
+  font-size: 14px; 
+  color: var(--text-dark); 
+  width: 60%; 
+  font-weight: 500;
+}
+
+input, select {
+  width: 38%;
+  padding: 8px 10px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 14px;
+  color: var(--deep-blue-ocean);
+  background-color: #ffffff;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: var(--bermuda-grass);
+  box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.2);
+}
+
+#custom-inputs-container {
+  background-color: var(--ocean-tray-bg);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+  border: 1px dashed rgba(12, 74, 110, 0.2);
+}
+
+.results-box {
+  background: var(--ocean-mist-bg);
+  padding: 20px;
+  border-radius: 12px;
+  border: 1.5px solid var(--border-mist);
+  margin-top: 25px;
+}
+
+.results-box h3 { 
+  margin-top: 18px; 
+  color: var(--deep-blue-ocean); 
+  border-bottom: 2px solid rgba(12, 74, 110, 0.1); 
+  padding-bottom: 6px; 
+  font-size: 15px;
+}
+
+.results-box h3:first-of-type { margin-top: 0; }
+.results-box p { display: flex; justify-content: space-between; font-size: 14px; margin: 10px 0; }
+.results-box span { font-weight: 700; color: var(--deep-blue-ocean); }
+
+.status-box {
+  text-align: center;
+  font-weight: 700;
+  padding: 14px;
+  border-radius: 8px;
+  margin-top: 20px;
+  font-size: 16px;
+}
+
+.pass { background-color: var(--morning-green-light); color: var(--morning-green-text); border: 1.5px solid rgba(46, 204, 113, 0.35); }
+.fail { background-color: var(--soft-fail-bg); color: var(--soft-fail-text); border: 1.5px solid rgba(155, 44, 44, 0.25); }
+
+/* ==========================================================================
+   BUTTON TRAY STYLING (Fixes the unstyled buttons)
+   ========================================================================== */
+.action-btn-tray {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.btn {
+  flex: 1;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.2s, transform 0.1s;
+  text-transform: uppercase;
+}
+
+.btn:active { transform: scale(0.98); }
+.btn-reset { background-color: #e2e8f0; color: #475569; }
+.btn-reset:hover { background-color: #cbd5e1; }
+.btn-pdf { background-color: var(--deep-blue-ocean); color: #ffffff; }
+.btn-pdf:hover { opacity: 0.9; }
+
+/* ... keep all your previous main container, layout, and button styles ... */
+
+/* Hide print-only headers and footers completely while using the app on a screen */
+.print-only-header, .print-only-footer {
+  display: none;
+}
+/* ==========================================================================
+   UPDATED: STRICT SINGLE-PAGE A4 PRINT CONFIGURATION
+   ========================================================================== */
+@media print {
+  /* Hides the default browser headers/footers (URLs, page numbers, dates) */
+  @page {
+    size: A4 portrait;
+    margin: 0.4in 0.5in 0.4in 0.5in;
+  }
+
+  /* Force the background to be pure white and clear margins */
+  html, body {
+    background: #ffffff !important;
+    height: 99% !important;
+    page-break-after: avoid !important;
+    page-break-before: avoid !important;
+    overflow: hidden !important;
+    font-size: 11px !important; /* Slightly smaller base font to save page space */
+  }
+
+  /* Shrink parent wrappers to prevent page spilling */
+  .calculator-container {
+    box-shadow: none !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    height: auto !important;
+  }
+
+  .print-only-header {
+    display: block !important;
+    font-size: 14px !important;
+    font-weight: 700;
+    color: #0c4a6e;
+    border-bottom: 2px solid #0a3d62;
+    padding-bottom: 3px;
+    margin-bottom: 12px !important;
+    text-transform: uppercase;
+  }
+
+  h2 {
+    color: #0a3d62 !important;
+    margin-top: 0 !important;
+    margin-bottom: 10px !important;
+    font-size: 18px !important;
+  }
+
+  /* Make spacing tighter between the measurement boxes */
+  fieldset {
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    margin-bottom: 8px !important;
+    padding: 8px 12px !important;
+    page-break-inside: avoid !important;
+  }
+
+  .input-row {
+    margin-bottom: 6px !important;
+  }
+
+  input, select, .action-btn-tray {
+    display: none !important;
+  }
+
+  .input-row::after {
+    content: attr(data-print-value);
+    font-weight: 700;
+    color: #0a3d62;
+    font-size: 12px;
+  }
+
+  .results-box {
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    padding: 12px !important;
+    margin-top: 10px !important;
+  }
+
+  .results-box h3 {
+    margin-top: 10px !important;
+    padding-bottom: 4px !important;
+  }
+  .results-box h3:first-of-type {
+    margin-top: 0 !important;
+  }
+
+  .status-box {
+    margin-top: 8px !important;
+    padding: 6px !important;
+    border: 1.5px solid #196f3d !important;
+  }
+
+  /* Pull the footer text tighter to the main report card elements */
+  .print-only-footer {
+    display: block !important;
+    margin-top: 20px !important;
+    text-align: center !important;
+    font-size: 10px !important;
+    color: #475569 !important;
+    page-break-inside: avoid !important;
+  }
+  
+  .footer-divider {
+    border-top: 1px solid #cbd5e1 !important;
+    margin-bottom: 6px !important;
+  }
+  
+  .footer-copyright {
+    font-weight: 700 !important;
+    margin: 1px 0 !important;
+    color: #1e293b !important;
+  }
+  
+  .footer-queries {
+    margin: 1px 0 !important;
+  }
+  
+  .email-link {
+    color: #0c4a6e !important;
+    font-weight: 600 !important;
+  }
+  
+  .footer-disclaimer {
+    margin-top: 4px !important;
+    color: #64748b !important;
+  }
+  /* Add this to your style sheet */
+.results-box.hidden-results {
+  display: none !important; /* Hides the entire panel frame from display when reset */
+}
+
+/* Neutral styling adjustment rule for compliance badge box when blank */
+.status-box.neutral {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+/* Container styling for the results panel with a smooth opacity fade */
+.results-box {
+  opacity: 1;
+  max-height: 1000px; /* Large enough value to safely display full content */
+  overflow: hidden;
+  transition: opacity 0.4s ease, max-height 0.4s ease, padding 0.4s ease, margin 0.4s ease;
+}
+
+/* Hides the results panel elements cleanly and smoothly fades it away */
+.results-box.hidden-results {
+  opacity: 0;
+  max-height: 0;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  border: none !important;
+}
+
+/* Styled text notice to fill out the form when the calculator is blank */
+.empty-state-notice {
+  text-align: center;
+  color: #666666;
+  font-style: italic;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border: 1px dashed #cccccc;
+  border-radius: 6px;
+  margin-top: 15px;
+  opacity: 1;
+  transition: opacity 0.4s ease;
+}
+
+/* Neutral baseline override rule for compliance status badge */
+.status-box.neutral {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+/* Styled red error badge alert for invalid negative or zero parameters */
+.error-state-box {
+  background-color: #fde8e8;
+  border: 1px solid #f8b4b4;
+  color: #9b1c1c;
+  padding: 15px;
+  border-radius: 6px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+/* Styling for the new Project Identification block */
+.project-details-section {
+  border: 1px solid #cbd5e1;
+  background-color: #f8fafc;
+  margin-bottom: 20px;
+  border-radius: 6px;
+}
+/* Fixed Navigation Link - Screen Pinning Layout */
+.nav-control-header {
+    position: fixed;   /* Pins the link directly to the screen view boundaries */
+    top: 25px;         /* Positions it 25 pixels down from the very top */
+    left: 25px;        /* Positions it 25 pixels out from the very left edge */
+    z-index: 999999;   /* Absolute max priority layer to overlay all cards */
+}
+
+.back-home-link {
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a759f; /* Blue color matching the theme */
+    text-decoration: underline; /* Adds the clean link underline */
+    transition: color 0.2s ease;
+}
+
+.back-home-link:hover {
+    color: #2d6a4f; /* Changes to green on hover */
+}

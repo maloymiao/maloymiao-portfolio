@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap');
+  .phone-wrap{display:flex;justify-content:center;padding:1rem 0 2rem}
+  .phone{width:340px;border-radius:40px;border:2.5px solid #2d6a4f;overflow:hidden;box-shadow:0 8px 32px rgba(45,106,79,.18);background:#e8f6fd;font-family:'Nunito',sans-serif}
+  .status-bar{background:#3a8fb5;padding:10px 18px 7px;display:flex;justify-content:space-between;align-items:center}
+  .status-greeting{font-size:13px;font-weight:700;color:#fff}
+  .status-icons{display:flex;gap:6px;align-items:center}
+  .status-icons span{font-size:11px;color:#fff;font-family:'DM Mono',monospace}
+  .wifi-icon svg{width:14px;height:14px;display:block}
+  .app-header{background:linear-gradient(160deg,#1a759f 0%,#2d6a4f 100%);padding:16px 20px 24px;position:relative;overflow:hidden}
+  .app-header::after{content:'';position:absolute;bottom:-18px;left:0;right:0;height:36px;background:#e8f6fd;border-radius:50% 50% 0 0/100% 100% 0 0}
+  .app-header-label{font-family:'DM Mono',monospace;font-size:9px;color:rgba(255,255,255,.7);letter-spacing:2.5px;text-transform:uppercase;margin-bottom:4px}
+  .app-header h1{font-size:20px;font-weight:800;color:#fff;line-height:1.2;margin:0}
+  .app-header .sub{font-size:11px;color:rgba(255,255,255,.78);margin-top:3px;font-weight:600}
+  .logo-upload-strip{margin-top:10px;position:relative;z-index:2}
+  .logo-upload-label{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.15);border:1px dashed rgba(255,255,255,.5);border-radius:8px;padding:5px 12px;cursor:pointer;font-family:'DM Mono',monospace;font-size:9.5px;color:rgba(255,255,255,.85)}
+  .logo-upload-label svg{width:12px;height:12px}
+  #logoFileInput{display:none}
+  .logo-preview-wrap{display:none;align-items:center;gap:8px;margin-top:6px}
+  .logo-preview-wrap.visible{display:flex}
+  .logo-preview-img{width:40px;height:40px;object-fit:contain;border-radius:6px;background:rgba(255,255,255,.15);padding:3px}
+  .logo-preview-name{font-family:'DM Mono',monospace;font-size:9px;color:rgba(255,255,255,.75);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .logo-remove-btn{background:none;border:none;cursor:pointer;color:rgba(255,255,255,.6);font-size:14px;padding:0 2px}
+  .scroll-body{background:#e8f6fd;padding:10px 12px 8px;max-height:530px;overflow-y:auto}
+  .scroll-body::-webkit-scrollbar{width:3px}
+  .scroll-body::-webkit-scrollbar-thumb{background:#74c69d;border-radius:4px}
+  .section-label{font-family:'DM Mono',monospace;font-size:9.5px;color:#1a759f;letter-spacing:2px;text-transform:uppercase;margin:12px 0 6px 2px}
+  .field-card{background:rgba(255,255,255,.84);border:1px solid rgba(116,198,157,.5);border-radius:14px;margin-bottom:8px;overflow:hidden}
+  .twin-row{display:flex}.twin-cell{flex:1;display:flex;flex-direction:column;padding:10px;gap:6px;min-width:0}
+  .twin-cell:first-child{border-right:.5px solid rgba(116,198,157,.35)}.twin-top{display:flex;align-items:center;gap:7px}
+  .field-icon{width:28px;height:28px;min-width:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .field-icon svg{width:16px;height:16px}
+  .icon-blue{background:#1a759f}.icon-green{background:#2d6a4f}.icon-teal{background:#40916c}.icon-sky{background:#52b5d9}.icon-warm{background:#e06c00}
+  .field-name{font-size:11px;font-weight:700;color:#1b4332;line-height:1.2}.field-unit{font-family:'DM Mono',monospace;font-size:9px;color:#52796f}
+  input[type="number"].twin-input{width:100%;background:rgba(232,246,253,.9);border:1px solid #a8d8ea;border-radius:8px;color:#1b4332;font-family:'DM Mono',monospace;font-size:14px;font-weight:500;padding:6px 8px;outline:none;text-align:center;box-sizing:border-box;-webkit-appearance:none}
+  input[type="number"].twin-input:focus{border-color:#1a759f;box-shadow:0 0 0 2px rgba(26,117,159,.18)}
+  input[type="number"].twin-input.ambient-input{border-color:#f0c070;background:rgba(255,248,230,.9)}
+  input[type="number"].twin-input::placeholder{color:#a0c4b8}
+  .field-row{display:flex;align-items:center;padding:10px 12px;border-bottom:.5px solid rgba(116,198,157,.3);gap:10px;box-sizing:border-box}
+  .field-row:last-child{border-bottom:none}.field-info{flex:1;min-width:0}.field-info .field-name{font-size:11.5px}
+  input[type="number"].mob{width:82px;min-width:0;flex-shrink:0;background:rgba(232,246,253,.9);border:1px solid #a8d8ea;border-radius:8px;color:#1b4332;font-family:'DM Mono',monospace;font-size:13px;padding:6px 8px;outline:none;text-align:right;box-sizing:border-box;-webkit-appearance:none}
+  input[type="number"].mob:focus{border-color:#1a759f}
+  input[type="number"].mob::placeholder{color:#a0c4b8}
+  .input-error{border-color:#c1121f!important;box-shadow:0 0 0 2px rgba(193,18,31,.15)!important;background:rgba(255,229,229,.75)!important}
+  .dim-row{padding:10px 12px;box-sizing:border-box}.dim-header{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  .dim-inputs{display:flex;gap:6px}.dim-item{flex:1;display:flex;flex-direction:column;gap:3px;min-width:0}
+  .dim-lbl{font-family:'DM Mono',monospace;font-size:9px;color:#52796f;text-align:center}
+  input[type="number"].dim{width:100%;background:rgba(232,246,253,.9);border:1px solid #a8d8ea;border-radius:8px;color:#1b4332;font-family:'DM Mono',monospace;font-size:13px;padding:6px 4px;outline:none;text-align:center;box-sizing:border-box;min-width:0;-webkit-appearance:none}
+  input[type="number"].dim:focus{border-color:#1a759f}
+  input[type="number"].dim::placeholder{color:#a0c4b8}
+  select.mob{width:108px;min-width:0;flex-shrink:0;background:rgba(232,246,253,.9);border:1px solid #a8d8ea;border-radius:8px;color:#1b4332;font-family:'DM Mono',monospace;font-size:11px;padding:6px 4px;outline:none;box-sizing:border-box;-webkit-appearance:none}
+  select.mob option{background:#fff;color:#1b4332}
+  .custom-row{display:none;align-items:center;padding:8px 12px 10px;gap:10px;border-top:.5px solid rgba(116,198,157,.3);background:rgba(168,216,234,.15)}
+  .custom-row.visible{display:flex}
+  .custom-hint{font-family:'DM Mono',monospace;font-size:10px;color:#1a759f;flex:1;line-height:1.4}
+  .custom-hint span{display:block;font-size:9px;color:#52796f;margin-top:1px}
+  input[type="number"].custom-input{width:96px;flex-shrink:0;background:rgba(255,255,255,.95);border:1.5px solid #1a759f;border-radius:8px;color:#1b4332;font-family:'DM Mono',monospace;font-size:14px;padding:6px 8px;outline:none;text-align:center;box-sizing:border-box;-webkit-appearance:none}
+  input[type="number"].custom-input::placeholder{color:#a0c4b8;font-size:11px}
+  .error-banner{border-radius:10px;padding:9px 12px;font-size:11px;font-family:'DM Mono',monospace;margin-bottom:8px;display:none;line-height:1.6}
+  .error-banner.visible{display:block}
+  .error-banner.type-empty{background:#ffe5e5;border:1px solid #c1121f;color:#7d0000}
+  .error-banner.type-range{background:#FAEEDA;border:1px solid #854F0B;color:#633806}
+  .result-sheet{background:rgba(255,255,255,.88);border:1.5px solid rgba(116,198,157,.5);border-radius:16px;overflow:hidden;margin-top:4px;margin-bottom:8px;display:none;animation:popUp .3s cubic-bezier(.22,1,.36,1)}
+  @keyframes popUp{from{opacity:0;transform:scale(.97) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}
+  .result-sheet.visible{display:block}
+  .result-top{background:linear-gradient(120deg,#1a759f 0%,#2d6a4f 100%);padding:16px 18px 14px;text-align:center}
+  .result-top-label{font-family:'DM Mono',monospace;font-size:9px;color:rgba(255,255,255,.7);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px}
+  .result-temp{font-family:'DM Mono',monospace;font-size:52px;font-weight:500;color:#fff;line-height:1;letter-spacing:-2px}
+  .result-temp .deg{font-size:22px;color:rgba(255,255,255,.7)}
+  .verdict-strip{padding:14px 16px}
+  .verdict-badge{display:flex;flex-direction:column;align-items:center;padding:12px 8px;border-radius:12px;text-align:center}
+  .verdict-badge .vb-label{font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:2px;text-transform:uppercase;margin-bottom:3px;opacity:.65}
+  .verdict-badge .vb-text{font-size:28px;font-weight:800;letter-spacing:3px}
+  .verdict-badge.pass{background:#d8f3dc;border:1.5px solid #40916c;color:#1b4332}
+  .verdict-badge.fail{background:#ffe5e5;border:1.5px solid #c1121f;color:#7d0000}
+  .criteria-note{font-family:'DM Mono',monospace;font-size:9px;color:#52796f;text-align:center;padding:0 16px 8px;letter-spacing:.5px;line-height:1.7}
+  .pdf-btn-wrap{padding:0 16px 16px}
+  .btn-pdf{width:100%;padding:11px;border-radius:12px;border:1.5px solid #1a759f;background:rgba(26,117,159,.08);color:#1a759f;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:7px}
+  .btn-pdf svg{width:15px;height:15px}
+  .copyright-strip{background:rgba(232,246,253,.96);border-top:.5px solid rgba(116,198,157,.3);padding:5px 16px 4px;display:flex;justify-content:flex-end}
+  .copyright-text{font-family:'DM Mono',monospace;font-size:9.5px;color:#52796f;opacity:.85}
+  .bottom-bar{background:rgba(232,246,253,.97);border-top:.5px solid rgba(116,198,157,.25);padding:8px 12px 14px;display:flex;gap:7px}
+  .btn-reset-m{flex:1;padding:11px 6px;border-radius:12px;border:1.5px solid rgba(116,198,157,.6);background:rgba(255,255,255,.7);color:#40916c;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer}
+  .btn-calc-m{flex:1.4;padding:11px 6px;border-radius:12px;border:none;background:linear-gradient(120deg,#1a759f 0%,#40916c 100%);color:#fff;font-family:'Nunito',sans-serif;font-size:12.5px;font-weight:800;cursor:pointer;text-transform:uppercase}
+  .btn-pdf-bottom{flex:1;padding:11px 6px;border-radius:12px;border:1.5px solid #a8d8ea;background:rgba(255,255,255,.5);color:#a0b8c0;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:not-allowed;display:flex;align-items:center;justify-content:center;gap:4px;transition:all .2s}
+  .btn-pdf-bottom.enabled{border-color:#1a759f;background:rgba(26,117,159,.08);color:#1a759f;cursor:pointer}
+  .btn-pdf-bottom svg{width:13px;height:13px;flex-shrink:0}
+  .home-indicator{height:20px;display:flex;align-items:center;justify-content:center;background:#e8f6fd}
+  .home-bar{width:100px;height:4px;background:#40916c;border-radius:4px;opacity:.5}
+  input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+  input[type=number]{-moz-appearance:textfield}
+</style>
+</head>
+<body>
+<!-- Back to Portfolio Home Control Link -->
+<div class="nav-control-header">
+    <a href="index.html" class="back-home-link">&larr; Back to Portfolio Home</a>
+</div>
+
+<div class="phone-wrap"><div class="phone">
+  <div class="status-bar">
+    <span class="status-greeting">Hello &#x1F60A;</span>
+    <div class="status-icons">
+      <span class="wifi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg></span>
+      <span>WiFi</span><span>&#x1F50B;</span>
+    </div>
+  </div>
+  <div class="app-header">
+    <div class="app-header-label">Dry-Type Transformer</div>
+    <h1>Heat Enclosure<br>Calculator</h1>
+    <div class="sub">Enclosure Temperature Assessment</div>
+    <div class="logo-upload-strip">
+      <label class="logo-upload-label" for="logoFileInput">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        Upload Company Logo for PDF
+      </label>
+      <input type="file" id="logoFileInput" accept="image/*" onchange="handleLogoUpload(event)">
+      <div class="logo-preview-wrap" id="logoPreviewWrap">
+        <img id="logoPreviewImg" class="logo-preview-img" src="" alt="Logo">
+        <span class="logo-preview-name" id="logoPreviewName"></span>
+        <button class="logo-remove-btn" onclick="removeLogo()">&#x2715;</button>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-body">
+    <div class="section-label">Input Parameters</div>
+    <div class="error-banner" id="errorMsg"></div>
+    <div class="field-card">
+      <div class="twin-row">
+        <div class="twin-cell">
+          <div class="twin-top"><div class="field-icon icon-blue"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><div><div class="field-name">Capacity</div><div class="field-unit">kVA (max 63,000)</div></div></div>
+          <input type="number" class="twin-input" id="capacity" placeholder="e.g. 600" step="any">
+        </div>
+        <div class="twin-cell">
+          <div class="twin-top"><div class="field-icon icon-warm"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg></div><div><div class="field-name">Ambient</div><div class="field-unit">&#176;C (IEC max 40)</div></div></div>
+          <input type="number" class="twin-input ambient-input" id="ambientTemp" value="30" step="0.1">
+        </div>
+      </div>
+    </div>
+    <div class="field-card">
+      <div class="dim-row">
+        <div class="dim-header"><div class="field-icon icon-green"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></div><div class="field-info"><div class="field-name">Enclosure Dimensions</div><div class="field-unit">meters (max 5.0 m each)</div></div></div>
+        <div class="dim-inputs">
+          <div class="dim-item"><span class="dim-lbl">Height (H)</span><input type="number" class="dim" id="dimH" placeholder="1.8" step="any"></div>
+          <div class="dim-item"><span class="dim-lbl">Width (W)</span><input type="number" class="dim" id="dimW" placeholder="1.7" step="any"></div>
+          <div class="dim-item"><span class="dim-lbl">Depth (D)</span><input type="number" class="dim" id="dimD" placeholder="0.95" step="any"></div>
+        </div>
+      </div>
+    </div>
+    <div class="field-card"><div class="field-row"><div class="field-icon icon-teal"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div><div class="field-info"><div class="field-name">Total Loss</div><div class="field-unit">Watts (max 5% of capacity)</div></div><input type="number" class="mob" id="totalLoss" placeholder="7270" step="any"></div></div>
+    <div class="field-card"><div class="field-row"><div class="field-icon icon-sky"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2 2 0 1 1 19.73 11H2"/></svg></div><div class="field-info"><div class="field-name">No. of Cooling Fans</div><div class="field-unit">quantity (max 58)</div></div><input type="number" class="mob" id="numFans" placeholder="5" step="1"></div></div>
+    <div class="field-card">
+      <div class="field-row"><div class="field-icon icon-blue"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></div><div class="field-info"><div class="field-name">Fan Airflow</div><div class="field-unit">m&#179;/s per fan</div></div>
+        <select class="mob" id="fanAirflow" onchange="handleAirflowChange()"><option value="" disabled selected>Select</option><option value="0.090">T1 - 0.090</option><option value="0.110">T2 - 0.110</option><option value="0.175">T3 - 0.175</option><option value="0.198">T4 - 0.198</option><option value="custom">Custom</option></select>
+      </div>
+      <div class="custom-row" id="customRow"><div class="custom-hint">Enter custom value<span>m&#179;/s per fan (max 10)</span></div><input type="number" class="custom-input" id="customAirflow" placeholder="e.g. 0.150" step="0.001"></div>
+    </div>
+    <div class="result-sheet" id="resultSheet">
+      <div class="result-top"><div class="result-top-label">Average Temperature Within Enclosure</div><div class="result-temp"><span id="avgTempDisplay">--</span><span class="deg"> &#176;C</span></div></div>
+      <div class="verdict-strip"><div class="verdict-badge" id="verdictBox"><div class="vb-label">Result</div><div class="vb-text" id="verdictText">--</div></div></div>
+      <div class="criteria-note" id="criteriaNote"></div>
+      <div class="pdf-btn-wrap"><button class="btn-pdf" onclick="generatePDF()"><svg viewBox="0 0 24 24" fill="none" stroke="#1a759f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Download PDF Report</button></div>
+    </div>
+  </div>
+  <div class="copyright-strip"><span class="copyright-text">&#169; maloymiao</span></div>
+  <div class="bottom-bar">
+    <button class="btn-reset-m" onclick="resetForm()">Reset</button>
+    <button class="btn-calc-m" onclick="calculate()">Calculate</button>
+    <button class="btn-pdf-bottom" id="pdfBtnBottom" onclick="generatePDF()" disabled>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>PDF
+    </button>
+  </div>
+  <div class="home-indicator"><div class="home-bar"></div></div>
+</div></div>
+
+<script>
+var FAN_D=0.150,FAN_GAP=0.050,W_LEFT=0.075,W_RIGHT=0.075;
+var W_ABS_MIN=0.5,H_MIN=0.5,D_MIN=0.35,DIM_MAX=5.0;
+var lastResult=null,userLogoDataUrl=null;
+
+function handleLogoUpload(e){var f=e.target.files[0];if(!f)return;var rd=new FileReader();rd.onload=function(ev){userLogoDataUrl=ev.target.result;document.getElementById('logoPreviewImg').src=userLogoDataUrl;document.getElementById('logoPreviewName').textContent=f.name;document.getElementById('logoPreviewWrap').classList.add('visible');};rd.readAsDataURL(f);}
+function removeLogo(){userLogoDataUrl=null;document.getElementById('logoFileInput').value='';document.getElementById('logoPreviewImg').src='';document.getElementById('logoPreviewName').textContent='';document.getElementById('logoPreviewWrap').classList.remove('visible');}
+function calcMinWidth(f){return Math.max((f*FAN_D)+((f-1)*FAN_GAP)+W_LEFT+W_RIGHT,W_ABS_MIN);}
+function clearErrors(){document.querySelectorAll('.input-error').forEach(function(el){el.classList.remove('input-error');});var e=document.getElementById('errorMsg');e.textContent='';e.className='error-banner';}
+function showError(msg,type){var e=document.getElementById('errorMsg');e.textContent=msg;e.className='error-banner visible type-'+(type||'empty');}
+function markErr(id){var el=document.getElementById(id);if(el)el.classList.add('input-error');}
+function handleAirflowChange(){var sel=document.getElementById('fanAirflow'),row=document.getElementById('customRow'),inp=document.getElementById('customAirflow');if(sel.value==='custom'){row.classList.add('visible');inp.focus();}else{row.classList.remove('visible');inp.value='';inp.classList.remove('input-error');}}
+function getAirflow(){var sel=document.getElementById('fanAirflow');return sel.value==='custom'?parseFloat(document.getElementById('customAirflow').value):parseFloat(sel.value);}
+function getAirflowLabel(){var sel=document.getElementById('fanAirflow');if(sel.value==='custom')return'Custom ('+document.getElementById('customAirflow').value+' m\u00B3/s)';return sel.options[sel.selectedIndex].text+' m\u00B3/s';}
+function disablePdf(){lastResult=null;var b=document.getElementById('pdfBtnBottom');b.disabled=true;b.classList.remove('enabled');}
+function enablePdf(){var b=document.getElementById('pdfBtnBottom');b.disabled=false;b.classList.add('enabled');}
+
+function calculate(){
+  clearErrors();document.getElementById('resultSheet').classList.remove('visible');disablePdf();
+  var capacity=parseFloat(document.getElementById('capacity').value);
+  var Ta=parseFloat(document.getElementById('ambientTemp').value);
+  var H=parseFloat(document.getElementById('dimH').value);
+  var W=parseFloat(document.getElementById('dimW').value);
+  var D=parseFloat(document.getElementById('dimD').value);
+  var totalLoss=parseFloat(document.getElementById('totalLoss').value);
+  var numFans=parseFloat(document.getElementById('numFans').value);
+  var isCustom=document.getElementById('fanAirflow').value==='custom';
+  var Q=getAirflow();
+  var req=[['capacity',capacity,'Transformer Capacity'],['ambientTemp',Ta,'Ambient Temperature'],['dimH',H,'Height (H)'],['dimW',W,'Width (W)'],['dimD',D,'Depth (D)'],['totalLoss',totalLoss,'Total Loss'],['numFans',numFans,'No. of Cooling Fans']];
+  for(var i=0;i<req.length;i++){if(isNaN(req[i][1])){markErr(req[i][0]);showError(req[i][2]+' is required.','empty');return;}}
+  if(isNaN(Q)||Q<=0){if(isCustom){markErr('customAirflow');showError('Custom Airflow is required.','empty');}else showError('Please select a fan airflow type.','empty');return;}
+  if(capacity<0.01||capacity>63000){markErr('capacity');showError('Transformer Capacity must be 0.01\u201363,000 kVA.','range');return;}
+  if(Ta<0||Ta>40){markErr('ambientTemp');showError('Ambient Temperature must be 0\u201340\u00B0C (IEC 60076-1).','range');return;}
+  if(H<H_MIN){markErr('dimH');showError('Height (H) minimum is 0.5 m.','range');return;}
+  if(H>DIM_MAX){markErr('dimH');showError('Height (H) must not exceed 5.0 m.','range');return;}
+  if(W<W_ABS_MIN){markErr('dimW');showError('0.5 m min. dimension w/ at least 1 no. cooling fan.','range');return;}
+  var wMin=calcMinWidth(numFans);
+  if(W<wMin){markErr('dimW');showError('Width too narrow for '+numFans+' fan(s). Min W=('+numFans+'\u00D70.150)+('+(numFans-1)+'\u00D70.050)+0.075+0.075='+wMin.toFixed(3)+' m.','range');return;}
+  if(W>DIM_MAX){markErr('dimW');showError('Width (W) must not exceed 5.0 m.','range');return;}
+  if(D<D_MIN){markErr('dimD');showError('Depth (D) minimum is 0.35 m.','range');return;}
+  if(D>DIM_MAX){markErr('dimD');showError('Depth (D) must not exceed 5.0 m.','range');return;}
+  if(numFans<1||numFans>58){markErr('numFans');showError('No. of Cooling Fans must be 1\u201358.','range');return;}
+  var maxLoss=capacity*1000*0.05;
+  if(totalLoss<1){markErr('totalLoss');showError('Total Loss must be at least 1 W.','range');return;}
+  if(totalLoss>maxLoss){markErr('totalLoss');showError('Total Loss '+totalLoss.toLocaleString()+' W exceeds 5% of capacity ('+maxLoss.toLocaleString()+' W max for '+capacity+' kVA).','range');return;}
+  if(isCustom&&(Q<0.001||Q>10)){markErr('customAirflow');showError('Custom Airflow must be 0.001\u201310.0 m\u00B3/s.','range');return;}
+  var Da=1.1644,Sa=1006,Kc=0.8;
+  var Qtotal=Q*numFans;
+  var Tr=(Kc*totalLoss)/(Sa*Da*Qtotal);
+  var AvgTemp=Tr+Ta;
+  var pass=AvgTemp<40;
+  document.getElementById('avgTempDisplay').textContent=AvgTemp.toFixed(1);
+  var vBox=document.getElementById('verdictBox');
+  document.getElementById('verdictText').textContent=pass?'PASS':'FAIL';
+  vBox.className='verdict-badge '+(pass?'pass':'fail');
+  document.getElementById('criteriaNote').textContent=
+    'Criteria: Temperature of cooling air \u2264 40\u00B0C  per IEC 60076-1, Clause 4.2.b\n'+
+    'Ambient Temp (Ta) = '+Ta.toFixed(1)+'\u00B0C   |   Temp Rise (Tr) = '+Tr.toFixed(2)+'\u00B0C';
+  document.getElementById('resultSheet').classList.add('visible');
+  setTimeout(function(){document.getElementById('resultSheet').scrollIntoView({behavior:'smooth',block:'nearest'});},100);
+  lastResult={capacity:capacity,Ta:Ta,H:H,W:W,D:D,totalLoss:totalLoss,numFans:numFans,
+    airflowLabel:getAirflowLabel(),Q:Q,Qtotal:Qtotal,Tr:Tr,AvgTemp:AvgTemp,pass:pass,timestamp:new Date()};
+  enablePdf();
+}
+
+function resetForm(){
+  ['capacity','dimH','dimW','dimD','totalLoss','numFans'].forEach(function(id){document.getElementById(id).value='';});
+  document.getElementById('ambientTemp').value='30';
+  document.getElementById('fanAirflow').selectedIndex=0;
+  document.getElementById('customRow').classList.remove('visible');
+  document.getElementById('customAirflow').value='';
+  document.getElementById('resultSheet').classList.remove('visible');
+  clearErrors();disablePdf();
+}
+
+function generatePDF(){
+  if(!lastResult)return;
+  var r=lastResult;
+  var jsPDF=window.jspdf.jsPDF;
+  var doc=new jsPDF({unit:'mm',format:'a4'});
+
+  var PW=210,PH=297,ML=25.4,MT=12.7,MB=12.7,CW=159.2;
+  var FOOTER_H=22,FOOTER_Y=PH-MB-FOOTER_H;
+  var oc=[26,117,159],gc=[45,106,79],dk=[27,67,50],gr=[100,110,105];
+  var amberBg=[255,248,225],amberBd=[200,160,0],amberTx=[100,65,0];
+  var infoBg=[240,248,255];
+  var passBg=[216,243,220],passT=[27,67,50];
+  var failBg=[255,229,229],failT=[125,0,0];
+
+  var y=MT;
+
+  // HEADER
+  doc.setFillColor(oc[0],oc[1],oc[2]);doc.rect(0,0,PW,30,'F');
+  doc.setFillColor(gc[0],gc[1],gc[2]);doc.rect(0,27,PW,3,'F');
+  var LS=20,LX=ML,LY=5,TX=ML+LS+5;
+  if(userLogoDataUrl){try{var m=userLogoDataUrl.substring(userLogoDataUrl.indexOf('/')+1,userLogoDataUrl.indexOf(';')).toUpperCase();if(m==='JPG'||m==='JPEG')m='JPEG';else m='PNG';doc.addImage(userLogoDataUrl,m,LX,LY,LS,LS);}catch(e){drawBolt(doc,LX,LY,LS);}}
+  else drawBolt(doc,LX,LY,LS);
+  doc.setTextColor(255,255,255);
+  doc.setFont('helvetica','bold');doc.setFontSize(14);doc.text('HEAT ENCLOSURE CALCULATOR',TX,LY+7);
+  doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.text('Dry-Type Transformer  |  Enclosure Temperature Assessment Report',TX,LY+13);
+  doc.setFontSize(7.5);doc.setTextColor(180,220,240);doc.text('Standards Reference: IEC 60076-1 / IEC 60076-11',TX,LY+19);
+  y=30+5;
+
+  // META
+  var ds=r.timestamp.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+  var ts=r.timestamp.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+  doc.setTextColor(gr[0],gr[1],gr[2]);doc.setFont('helvetica','normal');doc.setFontSize(8.5);
+  doc.text('Report Generated:  '+ds+'  at  '+ts,ML,y+5);
+  doc.text('Rated Power:  '+r.capacity.toLocaleString()+' kVA',ML+CW,y+5,{align:'right'});
+  y+=5;doc.setDrawColor(168,216,234);doc.setLineWidth(0.35);doc.line(ML,y+4,ML+CW,y+4);y+=9;
+
+  // INPUT PARAMETERS
+  y=sHead(doc,'INPUT PARAMETERS',ML,y,oc,CW);
+  var RH=6.2;
+  var inputs=[
+    ['Transformer Capacity',r.capacity.toLocaleString()+' kVA'],
+    ['Ambient Temperature (Ta)',r.Ta.toFixed(1)+' \u00B0C'],
+    ['Enclosure Height (H)',r.H.toFixed(3)+' m'],
+    ['Enclosure Width (W)',r.W.toFixed(3)+' m'],
+    ['Enclosure Depth (D)',r.D.toFixed(3)+' m'],
+    ['Total Loss (Hd)',r.totalLoss.toLocaleString()+' W'],
+    ['No. of Cooling Fans (F)',String(r.numFans)],
+    ['Fan Airflow per Fan (Q)',r.airflowLabel],
+  ];
+  inputs.forEach(function(row,i){
+    var bg=i%2===0?[232,246,253]:[255,255,255];
+    doc.setFillColor(bg[0],bg[1],bg[2]);doc.rect(ML,y-RH+1.5,CW,RH,'F');
+    doc.setFont('helvetica','bold');doc.setTextColor(dk[0],dk[1],dk[2]);doc.setFontSize(9);
+    doc.text(row[0],ML+3,y);
+    doc.setFont('helvetica','normal');doc.setTextColor(50,50,50);
+    doc.text(row[1],ML+CW-3,y,{align:'right'});
+    y+=RH;
+  });
+  y+=4;
+
+  // NOTE BOX
+  var NH=15;
+  doc.setFillColor(amberBg[0],amberBg[1],amberBg[2]);
+  doc.setDrawColor(amberBd[0],amberBd[1],amberBd[2]);doc.setLineWidth(0.4);
+  doc.roundedRect(ML,y,CW,NH,2,2,'FD');
+  doc.setFont('helvetica','bold');doc.setFontSize(7.5);doc.setTextColor(amberBd[0],amberBd[1],amberBd[2]);
+  doc.text('NOTE: Enclosure Dimensions',ML+3,y+5.5);
+  doc.setFont('helvetica','italic');doc.setFontSize(7.2);doc.setTextColor(amberTx[0],amberTx[1],amberTx[2]);
+  doc.text('The above H x W x D values are preliminary estimates for thermal analysis purposes only.',ML+3,y+10);
+  doc.text('Final dimensions shall be confirmed against the manufacturer\'s recommended specifications.',ML+3,y+14);
+  y+=NH+6;
+
+  // CALCULATION BREAKDOWN
+  y=sHead(doc,'CALCULATION BREAKDOWN',ML,y,oc,CW);
+  var EQH=9;
+  var calcs=[
+    {id:'Eq.1',name:'Combined Fan Airflow', formula:'Q_total = Q x F',                              val:r.Qtotal.toFixed(4)+' m3/s'},
+    {id:'Eq.2',name:'Calculated Temp Rise', formula:'Tr = (Kc x Hd) / (Sa x Da x Q_total)',        val:r.Tr.toFixed(2)+' \u00B0C'},
+    {id:'Eq.3',name:'Average Temperature',  formula:'Avg Temp = Tr + Ta',                           val:r.AvgTemp.toFixed(2)+' \u00B0C'},
+  ];
+  calcs.forEach(function(eq,i){
+    var bg=i%2===0?[235,248,235]:[245,250,255];
+    var rowTop=y;
+    doc.setFillColor(bg[0],bg[1],bg[2]);doc.rect(ML,rowTop,CW,EQH,'F');
+    doc.setDrawColor(210,230,210);doc.setLineWidth(0.15);doc.line(ML,rowTop+EQH,ML+CW,rowTop+EQH);
+    var midY=rowTop+EQH/2+1.5;
+    doc.setFillColor(oc[0],oc[1],oc[2]);doc.roundedRect(ML+1.5,rowTop+1.5,10,6,1,1,'F');
+    doc.setFont('helvetica','bold');doc.setFontSize(5.5);doc.setTextColor(255,255,255);
+    doc.text(eq.id,ML+2.2,rowTop+5.8);
+    doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(dk[0],dk[1],dk[2]);
+    doc.text(eq.name,ML+14,midY);
+    doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(gr[0],gr[1],gr[2]);
+    doc.text('--',ML+50,midY);
+    doc.setFont('courier','normal');doc.setFontSize(7.5);doc.setTextColor(40,80,60);
+    doc.text(eq.formula,ML+55,midY);
+    doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(dk[0],dk[1],dk[2]);
+    doc.text(eq.val,ML+CW-2,midY,{align:'right'});
+    y+=EQH;
+  });
+  y+=4;
+
+  // FIXED CONSTANTS BOX — 43.5mm equal top/bottom padding 3.5mm
+  var CH=43.5;
+  doc.setFillColor(infoBg[0],infoBg[1],infoBg[2]);
+  doc.setDrawColor(oc[0],oc[1],oc[2]);doc.setLineWidth(0.4);
+  doc.roundedRect(ML,y,CW,CH,2,2,'FD');
+  // FIX 2: title — CIPM-1981/91 replaces IEC 60076-11
+  doc.setFont('helvetica','bold');doc.setFontSize(7.5);doc.setTextColor(oc[0],oc[1],oc[2]);
+  doc.text('FIXED CONSTANTS  (Source: CIPM-1981/91 / ASHRAE Fundamentals)',ML+CW/2,y+3.5,{align:'center'});
+  doc.setDrawColor(180,210,230);doc.setLineWidth(0.25);doc.line(ML+3,y+5.5,ML+CW-3,y+5.5);
+  doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(50,50,50);
+  doc.text('Air Density (Da) = 1.1644 kg/m3  --  at 30C, 1 atm  (CIPM-1981/91)',ML+CW/2,y+10.5,{align:'center'});
+  doc.text('Specific Heat of Air (Sa) = 1006 J/kg.K  --  dry air, standard conditions  (ASHRAE HOF 2017)',ML+CW/2,y+16,{align:'center'});
+  // FIX 3: no trailing (CIPM-1981/91) on line 2 of Kc
+  doc.text('Convective Heat Fraction (Kc) = 0.8  --  accounts for thermal radiation losses through the',ML+CW/2,y+21.5,{align:'center'});
+  doc.text('enclosure walls and airflow bypass factor',ML+CW/2,y+26,{align:'center'});
+  doc.setDrawColor(180,210,230);doc.setLineWidth(0.25);doc.line(ML+3,y+28,ML+CW-3,y+28);
+  doc.setFont('helvetica','italic');doc.setFontSize(6.8);doc.setTextColor(60,80,100);
+  doc.text('Enclosure Heat Extraction Factor (Kc = 0.8): Adopted in accordance with standard industrial',ML+CW/2,y+32,{align:'center'});
+  doc.text('thermal management practices for forced-ventilated electrical enclosures. The coefficient assumes',ML+CW/2,y+36,{align:'center'});
+  doc.text('80% of losses evacuated via forced convection; 20% dissipates via radiation and natural convection.',ML+CW/2,y+40,{align:'center'});
+  y+=CH+5;
+
+  // RESULT BOX
+  var rbg=r.pass?passBg:failBg,rtx=r.pass?passT:failT;
+  var RESH=35;
+  doc.setFillColor(rbg[0],rbg[1],rbg[2]);
+  doc.setDrawColor(rtx[0],rtx[1],rtx[2]);doc.setLineWidth(0.8);
+  doc.roundedRect(ML,y,CW,RESH,4,4,'FD');
+
+  // Title centered
+  doc.setFont('helvetica','bold');doc.setFontSize(8.5);doc.setTextColor(rtx[0],rtx[1],rtx[2]);
+  doc.text('AVERAGE TEMPERATURE WITHIN ENCLOSURE',ML+CW/2,y+7,{align:'center'});
+
+  // Temp left, PASS/FAIL right
+  doc.setFontSize(24);doc.text(r.AvgTemp.toFixed(2)+' \u00B0C',ML+5,y+22);
+  doc.setFontSize(22);doc.text(r.pass?'PASS':'FAIL',ML+CW-5,y+22,{align:'right'});
+
+  // ── FIX: criteria lines — LEFT aligned, using ASCII <= to avoid encoding issue ──
+  doc.setFont('helvetica','normal');doc.setFontSize(7);doc.setTextColor(rtx[0],rtx[1],rtx[2]);
+  // Use plain text "<=40" — jsPDF WinAnsi safe, no broken symbol
+  doc.text('Criteria: Temperature of cooling air <= 40\u00B0C  per IEC 60076-1, Clause 4.2.b',ML+5,y+27.5);
+  doc.text('Ambient Temp (Ta) = '+r.Ta.toFixed(1)+'\u00B0C   |   Temp Rise (Tr) = '+r.Tr.toFixed(2)+'\u00B0C',ML+5,y+32.5);
+
+  // FOOTER
+  doc.setDrawColor(168,216,234);doc.setLineWidth(0.35);doc.line(ML,FOOTER_Y,ML+CW,FOOTER_Y);
+  doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(dk[0],dk[1],dk[2]);
+  doc.text('Heat Enclosure Calculator  \u00A9 maloymiao',ML,FOOTER_Y+5.5);
+  doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(gr[0],gr[1],gr[2]);
+  doc.text('Queries: maloymiao+heatenclosure@gmail.com',ML,FOOTER_Y+10.5);
+  doc.text('This report is generated for preliminary thermal assessment reference only.',ML,FOOTER_Y+15.5);
+  doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(oc[0],oc[1],oc[2]);
+  doc.text('Page 1 of 1',ML+CW,FOOTER_Y+10.5,{align:'right'});
+
+  var dt=r.timestamp;
+  var dateTag=dt.toISOString().slice(0,10).replace(/-/g,'');
+  var timeTag=String(dt.getHours()).padStart(2,'0')+String(dt.getMinutes()).padStart(2,'0');
+  var capTag=r.capacity.toString().replace('.','p')+'kVA';
+  doc.save('HeatEnclosure_'+capTag+'_'+dateTag+'_'+timeTag+'.pdf');
+}
+
+function drawBolt(doc,x,y,size){
+  doc.setFillColor(255,255,255);doc.roundedRect(x,y,size,size,3,3,'F');
+  doc.setFillColor(26,117,159);
+  var cx=x+size/2,cy=y+size/2;
+  doc.triangle(cx,y+3,cx-3.5,cy+0.5,cx+0.5,cy+0.5,'F');
+  doc.triangle(cx+0.5,cy+0.5,cx+3.5,y+3,cx,cy+0.5,'F');
+  doc.triangle(cx-3.5,cy+0.5,cx+0.5,cy+0.5,cx-2,y+size-3,'F');
+}
+function sHead(doc,text,x,y,col,cw){
+  doc.setFillColor(col[0],col[1],col[2]);doc.rect(x,y-5,3,9,'F');
+  doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(col[0],col[1],col[2]);
+  doc.text(text,x+5.5,y);
+  doc.setDrawColor(col[0],col[1],col[2]);doc.setLineWidth(0.15);doc.line(x,y+1.5,x+cw,y+1.5);
+  return y+7;
+}
+</script>
+</body>
+</html>
