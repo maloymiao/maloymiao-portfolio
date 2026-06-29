@@ -8,16 +8,19 @@
 </head>
 <body>
 
-        <!-- Forced Two-Row Mobile Adaptable Header -->
+    <!-- Clean, High-Compatibility Mobile Responsive Navigation Header -->
     <header>
-        <nav class="navbar" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px;">
-            <a href="#" class="logo">MaloyMiao<span></span></a>
+        <nav class="navbar" style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px;">
+            <!-- Bypasses Force-Dark Mode contrast bleaching by increasing visual weight -->
+            <a href="#" style="color: #ffffff !important; font-size: 1.45rem !important; font-weight: 900 !important; text-transform: uppercase !important; text-decoration: none !important; font-family: system-ui, -apple-system, sans-serif !important; letter-spacing: -0.5px !important;">
+            MALOY<b style="color: #0070f3 !important; font-weight: 900 !important;">MIAO</b>
+        </a>
             
-            <!-- Inline Responsive Wrapped Row Block -->
+            <!-- Unified Navigation Link ID Properties -->
             <ul class="nav-links" style="display: flex; flex-wrap: wrap; list-style: none; gap: 15px; margin: 0; padding: 0;">
                 <li><a href="#">Home</a></li>
                 <li><a href="#about">About</a></li>
-                <li><a href="#portfolio">Applications</a></li>
+                <li><a href="#applications" style="color: #94a3b8; text-decoration: none; font-weight: 600;">Applications</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
         </nav>
