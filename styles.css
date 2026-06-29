@@ -6,7 +6,6 @@
     --bg-light: #f7f9fa;
     --bg-white: #ffffff;
     --navbar-bg: #0f172a; /* Sleek Deep Slate */
-    --scroll-behavior: smooth; /* Smooth transitions across navigation anchor tags */
 }
 
 /* Reset Defaults */
@@ -52,6 +51,7 @@ header.scroll-active {
     align-items: center;
     padding: 1.2rem 2rem;
     transition: padding 0.3s ease;
+    flex-wrap: wrap; /* Allows wrapping on smaller screens */
 }
 
 header.scroll-active .navbar {
@@ -123,7 +123,7 @@ header.scroll-active .navbar {
 
 /* Hero Banner Layout */
 .hero-section {
-    padding: 11rem 2rem 6rem; /* Keeps exactly 11rem of safety space at the top */
+    padding: 10rem 2rem 6rem;
     background-color: var(--bg-white);
     display: flex;
     justify-content: center;
@@ -586,8 +586,8 @@ footer {
 }
 
 .form-input-block input:focus, .form-input-block textarea:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(0, 112, 243, 0.1);
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 4px rgba(0, 112, 243, 0.15) !important;
 }
 
 .btn-form-submit {
@@ -597,42 +597,6 @@ footer {
     text-align: center;
     padding: 1rem;
     font-size: 1rem;
-}
-/* Professional Mobile Responsiveness Patch */
-@media (max-width: 768px) {
-    /* Stack the profile columns vertically on mobile */
-    .about-flex-layout {
-        flex-direction: column;
-        gap: 2rem;
-    }
-
-    /* Keep the profile headshot centered on small viewports */
-    .profile-photo-wrapper {
-        justify-content: center;
-        margin-bottom: 1rem;
-    }
-
-    /* Add side spacing inside the contact form for mobile edges */
-    .portfolio-contact-form {
-        padding: 1.5rem;
-    }
-
-    /* Stack twin inputs on top of each other on mobile phones */
-    .form-row-twin {
-        flex-direction: column;
-        gap: 0;
-    }
-
-    /* Shrink large hero title fonts slightly so they don't break lines awkwardly */
-    .hero-title {
-        font-size: 2.2rem;
-    }
-}
-.form-input-block input:focus, 
-.form-input-block textarea:focus {
-    border-color: var(--primary-color) !important;
-    box-shadow: 0 0 0 4px rgba(0, 112, 243, 0.15) !important;
-    background-color: #ffffff;
 }
 /* Top Layout Intro Alignment */
 .profile-intro-row {
@@ -644,12 +608,12 @@ footer {
 }
 
 .profile-intro-row .section-intro {
-    margin-bottom: 0; /* Clear previous margin spacing so it aligns with the photo center */
+    margin-bottom: 0;
     flex: 1;
 }
 
 .profile-photo-wrapper {
-    flex-shrink: 0; /* Prevents the image container from squeezing */
+    flex-shrink: 0;
 }
 
 .profile-inline-image {
@@ -660,10 +624,58 @@ footer {
     border: 3px solid #ffffff;
     box-shadow: 0 4px 15px rgba(15, 23, 42, 0.12);
 }
+/* Professional Mobile Responsiveness Patch */
+/* Mobile Viewport Layout Overhaul */
+@media (max-width: 768px) {
+    /* Forces the header to expand down to fit two rows naturally */
+    .navbar {
+        flex-direction: column !important; 
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 1rem 0 !important;
+        gap: 0.8rem !important; /* Creates a clean vertical gap between logo and links */
+    }
 
-/* Ensure bottom columns sit nicely below the top intro row */
-.about-flex-layout {
-    display: flex;
-    gap: 3.5rem;
-    flex-wrap: wrap;
+    /* Centers your links and forces them into a flexible wrapped row block underneath */
+    .nav-links {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: wrap !important; 
+        justify-content: center !important;
+        gap: 1rem !important; /* Tightens the horizontal space between menu buttons */
+        width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    /* Sets a slightly more compact text font sizing for phone screens */
+    .nav-links a {
+        font-size: 0.9rem !important;
+        white-space: nowrap !important; /* Keeps individual words like "Applications" from splitting */
+    }
+
+    /* Keep your existing body layout overrides intact below */
+    .about-flex-layout {
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .profile-photo-wrapper {
+        justify-content: center;
+        margin-bottom: 1rem;
+    }
+
+    .portfolio-contact-form {
+        padding: 1.5rem;
+    }
+
+    .form-row-twin {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .hero-title {
+        font-size: 2.2rem;
+    }
 }
+
