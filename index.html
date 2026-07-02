@@ -8,19 +8,21 @@
 </head>
 <body>
 
-    <!-- Clean, High-Compatibility Mobile Responsive Navigation Header -->
+    <!-- Navigation Bar -->
     <header>
-        <nav class="navbar" style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px;">
-            <!-- Bypasses Force-Dark Mode contrast bleaching by increasing visual weight -->
-            <a href="#" style="color: #ffffff !important; font-size: 1.45rem !important; font-weight: 900 !important; text-transform: uppercase !important; text-decoration: none !important; font-family: system-ui, -apple-system, sans-serif !important; letter-spacing: -0.5px !important;">
-            MALOY<b style="color: #0070f3 !important; font-weight: 900 !important;">MIAO</b>
+        <nav class="navbar">
+        <!-- Responsive Logo Image and Brand Text Block -->
+        <a href="#" style="display: flex; align-items: center; gap: 10px; text-decoration: none !important;">
+            <img src="my-logo.png" alt="MaloyMiao Logo" style="width: 32px; height: 32px; object-fit: contain; border-radius: 50%;">
+            <span style="color: #ffffff !important; font-size: 1.45rem !important; font-weight: 900 !important; text-transform: uppercase !important; font-family: system-ui, -apple-system, sans-serif !important; letter-spacing: -0.5px !important;">
+                MALOY<b style="color: #0070f3 !important; font-weight: 900 !important;">MIAO</b>
+            </span>
         </a>
-            
-            <!-- Unified Navigation Link ID Properties -->
-            <ul class="nav-links" style="display: flex; flex-wrap: wrap; list-style: none; gap: 15px; margin: 0; padding: 0;">
-                <li><a href="#">Home</a></li>
+
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
                 <li><a href="#about">About</a></li>
-                <li><a href="#applications" style="color: #94a3b8; text-decoration: none; font-weight: 600;">Applications</a></li>
+                <li><a href="#applications">Applications</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
         </nav>
@@ -39,18 +41,21 @@
         </div>
     </section>
 
-        <!-- Professional Profile Section -->
+    <!-- Professional Profile Section -->
     <section id="about" class="about-section">
         <div class="section-container text-left-align">
             <h2>Professional Profile</h2>
-                        <div class="profile-intro-row">
+            
+            <!-- Top Layout Row: Bio Intro text next to your Photo -->
+            <div class="profile-intro-row">
                 <p class="section-intro">With a Bachelor's Degree in Electrical Engineering and over two decades of industry experience, I specialize in combining power systems infrastructure engineering with modern automation and web applications.</p>
                 
                 <div class="profile-photo-wrapper">
                     <img src="profile.jpg" alt="Marlon Cabargada" class="profile-inline-image">
                 </div>
             </div>
-
+            
+            <!-- Bottom Layout Row: Two Columns for Core Competencies and Experience -->
             <div class="about-flex-layout">
                 <!-- Left Column: Core Focus Areas -->
                 <div class="about-column">
@@ -65,7 +70,7 @@
                     </ul>
                 </div>
 
-                <!-- Right Column: Professional Timeline -->
+                <!-- Right Column: Timeline History -->
                 <div class="about-column">
                     <h3>Engineering Experience</h3>
                     <div class="timeline-item">
@@ -77,11 +82,6 @@
                         <h4>M&E Project Engineer</h4>
                         <p class="company-sub">Kendo M&E Solutions / Liquid Space | 2015 – 2020</p>
                         <p class="role-desc">Managed electrical estimates for tender projects (GeBiz monitoring), coordinated material procurement, and designed custom layout proposals and simulations.</p>
-                    </div>
-                    <div class="timeline-item">
-                        <h4>Assistant Project Engineer & Specialist</h4>
-                        <p class="company-sub">Kenpower / Edjan Engineering / Primary Properties | 2010 – 2015</p>
-                        <p class="role-desc">Executed on-site technical surveys, risk assessment safety protocols, and spearheaded preventive maintenance schedules (PMS) for electrical substations up to 69kV.</p>
                     </div>
                 </div>
             </div>
@@ -114,7 +114,7 @@
         </div>
     </section>
 
-    <!-- Interactive Contact Section Component -->
+        <!-- Interactive Contact Section Component -->
     <section id="contact" class="contact-section">
         <div class="section-container">
             <h2>Let's Connect</h2>
