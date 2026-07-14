@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Distribution Transformer Sizing Calculator</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="phone-frame">
+  <div class="app">
+
+    <!-- HEADER -->
+    <header class="app-header">
+      <div class="logo-upload">
+        <img id="logoImg" src="" alt="" class="logo-img hidden">
+        <label for="logoInput" class="logo-placeholder" id="logoPlaceholder">+ Logo</label>
+        <input type="file" id="logoInput" accept="image/*" class="hidden">
+      </div>
+      <div class="header-text">
+        <h1>DISTRIBUTION TRANSFORMER CALCULATIONS</h1>
+        <p class="subtitle">Transformer Sizing</p>
+      </div>
+    </header>
+
+    <main class="calc-table">
+
+      <!-- PRIMARY VOLTAGE -->
+      <div class="row input-row">
+        <label for="primaryVoltage">Primary Rated Voltage (kV)</label>
+        <span class="eq">=</span>
+        <input type="number" id="primaryVoltage" step="0.001" value="11.000">
+      </div>
+
+      <!-- SECONDARY VOLTAGE -->
+      <div class="row input-row">
+        <label for="secondaryVoltage">Secondary Rated Voltage (kV)</label>
+        <span class="eq">=</span>
+        <input type="number" id="secondaryVoltage" step="0.001" value="0.400">
+      </div>
+
+      <!-- NO LOAD VOLTAGE -->
+      <div class="row input-row">
+        <label for="noLoadVoltage">Secondary No Load Voltage (kV)</label>
+        <span class="eq">=</span>
+        <input type="number" id="noLoadVoltage" step="0.001" value="0.415">
+      </div>
+
+      <!-- NO LOAD VOLTAGE ERROR BANNER -->
+      <div class="row error-row" id="noLoadErrorRow">
+        <span class="error-text" id="noLoadErrorText">&#9888; No Load Voltage must be greater than Secondary Rated Voltage.</span>
+      </div>
+
+      <!-- VOLTAGE ERROR BANNER -->
+      <div class="row error-row" id="voltageErrorRow">
+        <span class="error-text">&#9888; Voltage values must be greater than 0 kV.</span>
+      </div>
+
+      <!-- IMPEDANCE VOLTAGE %Z -->
+      <div class="row input-row">
+        <label for="impedanceZ">Transformer Impedance Voltage %Z</label>
+        <span class="eq">=</span>
+        <input type="number" id="impedanceZ" step="0.1" min="1" max="15" value="5.0">
+      </div>
+
+      <!-- IMPEDANCE ERROR BANNER -->
+      <div class="row error-row" id="impedanceErrorRow">
+        <span class="error-text" id="impedanceErrorText">&#9888; %Z is below IEC 60076-5 minimum.</span>
+      </div>
+
+      <!-- SECONDARY VOLTAGE @ FULL LOAD (output) -->
+      <div class="row output-row">
+        <label>Secondary Voltage @ Full Load (kV)</label>
+        <span class="eq">=</span>
+        <output id="secVFullLoad">--</output>
+      </div>
+
+      <!-- SECONDARY VOLTAGE @ PERMISSIBLE LOADING (output) -->
+      <div class="row output-row">
+        <label>Secondary Voltage @ Permissible Loading % (kV)</label>
+        <span class="eq">=</span>
+        <output id="secVPermissible">--</output>
+      </div>
+
+      <!-- MAX DEMAND LOAD -->
+      <div class="row input-row">
+        <label for="maxDemandLoad">Maximum Demand Load (kW)</label>
+        <span class="eq">=</span>
+        <input type="number" id="maxDemandLoad" step="1" value="150">
+      </div>
+
+      <!-- POWER FACTOR -->
+      <div class="row input-row">
+        <label for="powerFactor">Power Factor (PF), after Correction</label>
+        <span class="eq">=</span>
+        <input type="number" id="powerFactor" step="0.01" min="0.80" max="1" value="0.90">
+      </div>
+
+      <!-- PF ERROR BANNER -->
+      <div class="row error-row" id="pfErrorRow">
+        <span class="error-text">&#9888; Power Factor must be between 0.80 and 1.0 — value has been capped.</span>
+      </div>
+
+      <!-- MAX APPARENT POWER (output) -->
+      <div class="row output-row highlight">
+        <label>Max. Apparent Power (kVA)</label>
+        <span class="eq">=</span>
+        <output id="maxApparentPower">--</output>
+      </div>
+
+      <!-- TRANSFORMER TYPE -->
+      <div class="row input-row">
+        <label for="transformerType">Transformer Type</label>
+        <span class="eq">=</span>
+        <select id="transformerType">
+        <option value="DRY">DRY</option>
+        <option value="OIL">OIL</option>
+        </select>
+      </div>
+
+      <!-- COOLING CLASS -->
+      <div class="row input-row">
+        <label for="coolingClass" id="coolingClassLabel">Cooling Class (IEC 60076-11)</label>
+        <span class="eq">=</span>
+        <select id="coolingClass">
+        <option value="AN">AN — Air Natural</option>
+        <option value="AF">AF — Air Forced</option>
+        <option value="ANAF">ANAF — Natural / Forced</option>
+        </select>
+      </div>
+
+      <!-- PERMISSIBLE LOADING % -->
+      <div class="row input-row">
+        <label for="permissibleLoading">Permissible Loading Percentage (%)</label>
+        <span class="eq">=</span>
+        <input type="number" id="permissibleLoading" step="1" min="1" max="100" value="90">
+      </div>
+
+      <!-- CALCULATED RATING (output) -->
+      <div class="row output-row highlight">
+        <label>Calculated Transformer Rating (kVA)</label>
+        <span class="eq">=</span>
+        <output id="calcRating">--</output>
+      </div>
+
+      <!-- RATING MODE SELECTOR -->
+      <div class="row input-row">
+        <label for="ratingMode">Transformer Rating Source</label>
+        <span class="eq">=</span>
+        <select id="ratingMode">
+          <option value="standard">IEC R10 Series</option>
+          <option value="extended">Extended List</option>
+          <option value="custom">Custom Value</option>
+        </select>
+      </div>
+
+      <!-- CUSTOM RATING INPUT (hidden by default) -->
+      <div class="row input-row" id="customRatingRow" style="display:none;">
+        <label for="customRating">Custom Transformer Rating (kVA)</label>
+        <span class="eq">=</span>
+        <input type="number" id="customRating" step="1" value="200">
+      </div>
+
+      <!-- NEAREST STANDARD RATING (output) -->
+      <div class="row output-row highlight">
+        <label>The Nearest Standard Transformer Rating (kVA)</label>
+        <span class="eq">=</span>
+        <output id="stdRating">--</output>
+      </div>
+
+      <!-- LOADING PERCENTAGE (output) -->
+      <div class="row output-row highlight">
+        <label>Transformer Loading Percentage (%)</label>
+        <span class="eq">=</span>
+        <output id="loadingPct">--</output>
+      </div>
+
+      <!-- STATUS BANNER -->
+      <div class="row status-row">
+        <span id="ratingStatus" class="status-banner neutral">Enter values above to calculate</span>
+      </div>
+
+    </main>
+
+    <footer class="app-footer">
+      <button id="resetBtn" class="btn-secondary">Reset</button>
+      <button id="pdfBtn" class="btn-primary">Export PDF</button>
+    </footer>
+
+    <p class="brand-credit">© maloymiao</p>
+
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
