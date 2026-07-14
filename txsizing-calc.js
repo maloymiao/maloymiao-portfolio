@@ -1,199 +1,608 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Distribution Transformer Sizing Calculator</title>
-<link rel="stylesheet" href="txsizing-calc.css">
-</head>
-<body>
+// ============================================================
+// DISTRIBUTION TRANSFORMER SIZING CALCULATOR
+// © maloymiao
+// ============================================================
 
-<div class="phone-frame">
-  <div class="app">
+// IEC 60076-1 R10 Preferred Number Series
+const STANDARD_RATINGS = [
+  25, 31.5, 40, 50, 63, 80, 100, 125, 160, 200,
+  250, 315, 400, 500, 630, 800, 1000, 1250, 1600,
+  2000, 2500
+];
 
-    <!-- HEADER -->
-    <header class="app-header">
-      <div class="logo-upload">
-        <img id="logoImg" src="" alt="" class="logo-img hidden">
-        <label for="logoInput" class="logo-placeholder" id="logoPlaceholder">+ Logo</label>
-        <input type="file" id="logoInput" accept="image/*" class="hidden">
-      </div>
-      <div class="header-text">
-        <h1>DISTRIBUTION TRANSFORMER CALCULATIONS</h1>
-        <p class="subtitle">Transformer Sizing</p>
-      </div>
-    </header>
+// Extended list — includes non-IEC R10 values for local stock / vendor availability
+const EXTENDED_RATINGS = [
+  10, 15, 25, 30, 40, 50, 60, 75, 80, 90, 100, 120, 140, 150, 160, 200, 220, 250,
+  300, 350, 400, 420, 500, 550, 600, 630, 700, 750, 800, 850, 900, 1000, 1250,
+  1500, 1600, 2000, 2500
+].sort((a, b) => a - b);
 
-    <main class="calc-table">
+// IEC 60076-11 cooling class capacity multipliers
+// AF cooling increases effective capacity — so required kVA is DIVIDED by multiplier
+// meaning a smaller standard rating becomes sufficient
+const COOLING_MULTIPLIERS = {
+  AN:   1.00,  // base rating, no uplift
+  AF:   1.25,  // 25% capacity uplift with forced air fans
+  ANAF: 1.25,  // dual-rated, AF mode gives 25% uplift
+  ONAN: 1.00,  // base rating for oil natural
+  ONAF: 1.25,  // oil with forced air, 25% uplift
+};
 
-      <!-- PRIMARY VOLTAGE -->
-      <div class="row input-row">
-        <label for="primaryVoltage">Primary Rated Voltage (kV)</label>
-        <span class="eq">=</span>
-        <input type="number" id="primaryVoltage" step="0.001" value="11.000">
-      </div>
+// ============================================================
+// ELEMENT REFERENCES
+// ============================================================
+const els = {
+  primaryVoltage:     document.getElementById('primaryVoltage'),
+  secondaryVoltage:   document.getElementById('secondaryVoltage'),
+  noLoadVoltage:      document.getElementById('noLoadVoltage'),
+  voltageErrorRow:    document.getElementById('voltageErrorRow'),
+  impedanceZ:         document.getElementById('impedanceZ'),
+  secVFullLoad:       document.getElementById('secVFullLoad'),
+  secVPermissible:    document.getElementById('secVPermissible'),
+  maxDemandLoad:      document.getElementById('maxDemandLoad'),
+  powerFactor:        document.getElementById('powerFactor'),
+  pfErrorRow:         document.getElementById('pfErrorRow'),
+  maxApparentPower:   document.getElementById('maxApparentPower'),
+  transformerType:    document.getElementById('transformerType'),
+  permissibleLoading: document.getElementById('permissibleLoading'),
+  calcRating:         document.getElementById('calcRating'),
+  ratingMode:         document.getElementById('ratingMode'),
+  customRatingRow:    document.getElementById('customRatingRow'),
+  customRating:       document.getElementById('customRating'),
+  stdRating:          document.getElementById('stdRating'),
+  loadingPct:         document.getElementById('loadingPct'),
+  ratingStatus:       document.getElementById('ratingStatus'),
+  resetBtn:           document.getElementById('resetBtn'),
+  pdfBtn:             document.getElementById('pdfBtn'),
+  logoInput:          document.getElementById('logoInput'),
+  logoImg:            document.getElementById('logoImg'),
+  logoPlaceholder:    document.getElementById('logoPlaceholder'),
+  impedanceErrorRow:  document.getElementById('impedanceErrorRow'),
+  impedanceErrorText: document.getElementById('impedanceErrorText'),
+  noLoadErrorRow:  document.getElementById('noLoadErrorRow'),
+  coolingClass: document.getElementById('coolingClass'),
+  coolingClassLabel: document.getElementById('coolingClassLabel'),
+};
 
-      <!-- SECONDARY VOLTAGE -->
-      <div class="row input-row">
-        <label for="secondaryVoltage">Secondary Rated Voltage (kV)</label>
-        <span class="eq">=</span>
-        <input type="number" id="secondaryVoltage" step="0.001" value="0.400">
-      </div>
+// ============================================================
+// HELPER — NEAREST STANDARD RATING
+// ============================================================
+function findNearestStandardRating(value, list) {
+  for (const r of list) {
+    if (r >= value) return r;
+  }
+  return list[list.length - 1];
+}
 
-      <!-- NO LOAD VOLTAGE -->
-      <div class="row input-row">
-        <label for="noLoadVoltage">Secondary No Load Voltage (kV)</label>
-        <span class="eq">=</span>
-        <input type="number" id="noLoadVoltage" step="0.001" value="0.415">
-      </div>
+function getMinImpedanceZ(ratedKVA) {
+  if (ratedKVA <= 630)    return 4.0;
+  if (ratedKVA <= 1250)   return 5.0;
+  if (ratedKVA <= 2500)   return 6.0;
+  if (ratedKVA <= 6300)   return 7.0;
+  if (ratedKVA <= 25000)  return 8.0;
+  if (ratedKVA <= 40000)  return 10.0;
+  if (ratedKVA <= 63000)  return 11.0;
+  if (ratedKVA <= 100000) return 12.5;
+  return 12.5;
+}
 
-      <!-- NO LOAD VOLTAGE ERROR BANNER -->
-      <div class="row error-row" id="noLoadErrorRow">
-        <span class="error-text" id="noLoadErrorText">&#9888; No Load Voltage must be greater than Secondary Rated Voltage.</span>
-      </div>
+function checkImpedanceZ() {
+  const stdRatingNum  = parseFloat(els.stdRating.textContent) || 0;
+  const impedanceZNum = parseFloat(els.impedanceZ.value)      || 0;
 
-      <!-- VOLTAGE ERROR BANNER -->
-      <div class="row error-row" id="voltageErrorRow">
-        <span class="error-text">&#9888; Voltage values must be greater than 0 kV.</span>
-      </div>
+  if (stdRatingNum <= 0 || impedanceZNum <= 0) {
+    els.impedanceErrorRow.style.display = 'none';
+    return;
+  }
 
-      <!-- IMPEDANCE VOLTAGE %Z -->
-      <div class="row input-row">
-        <label for="impedanceZ">Transformer Impedance Voltage %Z</label>
-        <span class="eq">=</span>
-        <input type="number" id="impedanceZ" step="0.1" min="1" max="15" value="5.0">
-      </div>
+  const minZ = getMinImpedanceZ(stdRatingNum);
+  if (impedanceZNum < minZ) {
+    els.impedanceErrorText.innerHTML =
+      `&#9888; %Z = ${impedanceZNum}% is below IEC 60076-5 minimum of ${minZ}% for ${stdRatingNum} kVA. Please increase %Z.`;
+    els.impedanceErrorRow.style.display = 'grid';
+  } else {
+    els.impedanceErrorRow.style.display = 'none';
+  }
+}
 
-      <!-- IMPEDANCE ERROR BANNER -->
-      <div class="row error-row" id="impedanceErrorRow">
-        <span class="error-text" id="impedanceErrorText">&#9888; %Z is below IEC 60076-5 minimum.</span>
-      </div>
+// ============================================================
+// MAIN CALCULATION
+// ============================================================
+function calculate() {
 
-      <!-- SECONDARY VOLTAGE @ FULL LOAD (output) -->
-      <div class="row output-row">
-        <label>Secondary Voltage @ Full Load (kV)</label>
-        <span class="eq">=</span>
-        <output id="secVFullLoad">--</output>
-      </div>
+  // --- VOLTAGE INPUTS ---
+  const primaryV   = parseFloat(els.primaryVoltage.value)   || 0;
+  const secondaryV = parseFloat(els.secondaryVoltage.value) || 0;
+  const noLoadV    = parseFloat(els.noLoadVoltage.value)    || 0;
 
-      <!-- SECONDARY VOLTAGE @ PERMISSIBLE LOADING (output) -->
-      <div class="row output-row">
-        <label>Secondary Voltage @ Permissible Loading % (kV)</label>
-        <span class="eq">=</span>
-        <output id="secVPermissible">--</output>
-      </div>
+  // Voltage validation
+  if (primaryV <= 0 || secondaryV <= 0 || noLoadV <= 0) {
+    els.voltageErrorRow.querySelector('.error-text').innerHTML =
+      '&#9888; Voltage values must be greater than 0 kV.';
+    els.voltageErrorRow.style.display = 'grid';
+  } else if (primaryV > 66 || secondaryV > 33 || noLoadV > 33) {
+    els.voltageErrorRow.querySelector('.error-text').innerHTML =
+      '&#9888; Primary Voltage max 66 kV. Secondary / No Load Voltage max 33 kV.';
+    els.voltageErrorRow.style.display = 'grid';
+  } else {
+    els.voltageErrorRow.style.display = 'none';
+    els.voltageErrorRow.querySelector('.error-text').innerHTML =
+      '&#9888; Voltage values must be greater than 0 kV.';
+  }
 
-      <!-- MAX DEMAND LOAD -->
-      <div class="row input-row">
-        <label for="maxDemandLoad">Maximum Demand Load (kW)</label>
-        <span class="eq">=</span>
-        <input type="number" id="maxDemandLoad" step="1" value="150">
-      </div>
+  // No Load Voltage must exceed Secondary Rated Voltage
+  if (noLoadV > 0 && secondaryV > 0 && noLoadV <= secondaryV) {
+    els.noLoadErrorRow.style.display = 'grid';
+  } else {
+    els.noLoadErrorRow.style.display = 'none';
+  }
 
-      <!-- POWER FACTOR -->
-      <div class="row input-row">
-        <label for="powerFactor">Power Factor (PF), after Correction</label>
-        <span class="eq">=</span>
-        <input type="number" id="powerFactor" step="0.01" min="0.80" max="1" value="0.90">
-      </div>
+  // Block all calculations if voltages are invalid
+  if (primaryV <= 0 || secondaryV <= 0 || noLoadV <= 0 ||
+      primaryV > 66 || secondaryV > 33 || noLoadV > 33 ||
+      noLoadV <= secondaryV) {
+    els.secVFullLoad.textContent     = '--';
+    els.secVPermissible.textContent  = '--';
+    els.maxApparentPower.textContent = '--';
+    els.calcRating.textContent       = '--';
+    els.stdRating.textContent        = '--';
+    els.loadingPct.textContent       = '--';
+    els.ratingStatus.textContent     = 'Enter values above to calculate';
+    els.ratingStatus.className       = 'status-banner neutral';
+    return;
+  }
 
-      <!-- PF ERROR BANNER -->
-      <div class="row error-row" id="pfErrorRow">
-        <span class="error-text">&#9888; Power Factor must be between 0.80 and 1.0 — value has been capped.</span>
-      </div>
+  // --- IMPEDANCE VOLTAGE %Z ---
+  const impedanceZ = parseFloat(els.impedanceZ.value) || 5;
 
-      <!-- MAX APPARENT POWER (output) -->
-      <div class="row output-row highlight">
-        <label>Max. Apparent Power (kVA)</label>
-        <span class="eq">=</span>
-        <output id="maxApparentPower">--</output>
-      </div>
+  // --- PERMISSIBLE LOADING % ---
+  let permissibleLoadPct = parseFloat(els.permissibleLoading.value) || 100;
+  if (permissibleLoadPct <= 0 || permissibleLoadPct > 100) {
+    permissibleLoadPct = 100;
+    els.permissibleLoading.value = 100;
+  }
 
-      <!-- TRANSFORMER TYPE -->
-      <div class="row input-row">
-        <label for="transformerType">Transformer Type</label>
-        <span class="eq">=</span>
-        <select id="transformerType">
-        <option value="DRY">DRY</option>
-        <option value="OIL">OIL</option>
-        </select>
-      </div>
+  // --- SECONDARY VOLTAGES (IEC 60076-1) ---
+  // Full load: no-load voltage drops by full %Z
+  const secVFullLoad = noLoadV * (1 - impedanceZ / 100);
+  // Permissible loading: voltage drop proportional to loading fraction
+  const secVPermissible = noLoadV * (1 - (impedanceZ / 100) * (permissibleLoadPct / 100));
+  els.secVFullLoad.textContent    = secVFullLoad.toFixed(3);
+  els.secVPermissible.textContent = secVPermissible.toFixed(3);
 
-      <!-- COOLING CLASS -->
-      <div class="row input-row">
-        <label for="coolingClass" id="coolingClassLabel">Cooling Class (IEC 60076-11)</label>
-        <span class="eq">=</span>
-        <select id="coolingClass">
-        <option value="AN">AN — Air Natural</option>
-        <option value="AF">AF — Air Forced</option>
-        <option value="ANAF">ANAF — Natural / Forced</option>
-        </select>
-      </div>
+  // --- POWER FACTOR VALIDATION ---
+  let pf = parseFloat(els.powerFactor.value);
+  if (isNaN(pf)) pf = 1;
+  if (pf > 1) {
+    pf = 1;
+    els.powerFactor.value = 1;
+    els.powerFactor.classList.remove('default-value');
+    els.pfErrorRow.style.display = 'grid';
+  } else if (pf < 0.8) {
+    els.pfErrorRow.style.display = 'grid';
+    pf = pf < 0 ? 0.8 : pf; // show error but don't cap while typing
+  } else {
+    els.pfErrorRow.style.display = 'none';
+  }
 
-      <!-- PERMISSIBLE LOADING % -->
-      <div class="row input-row">
-        <label for="permissibleLoading">Permissible Loading Percentage (%)</label>
-        <span class="eq">=</span>
-        <input type="number" id="permissibleLoading" step="1" min="1" max="100" value="90">
-      </div>
+  // --- MAX APPARENT POWER ---
+  const maxDemand       = parseFloat(els.maxDemandLoad.value) || 0;
+  const maxApparentPower = pf > 0 ? maxDemand / pf : 0;
+  els.maxApparentPower.textContent = maxApparentPower.toFixed(0);
 
-      <!-- CALCULATED RATING (output) -->
-      <div class="row output-row highlight">
-        <label>Calculated Transformer Rating (kVA)</label>
-        <span class="eq">=</span>
-        <output id="calcRating">--</output>
-      </div>
+  // --- CALCULATED TRANSFORMER RATING ---
+  const loadFraction    = permissibleLoadPct / 100;
+  const coolingMultiplier = COOLING_MULTIPLIERS[els.coolingClass.value] ?? 1.00;
+  // Divide by cooling multiplier — AF cooling means a smaller nameplate rating suffices
+  const calcRating = loadFraction > 0
+    ? (maxApparentPower / loadFraction) / coolingMultiplier
+    : 0;
+  els.calcRating.textContent = calcRating.toFixed(0);
 
-      <!-- RATING MODE SELECTOR -->
-      <div class="row input-row">
-        <label for="ratingMode">Transformer Rating Source</label>
-        <span class="eq">=</span>
-        <select id="ratingMode">
-          <option value="standard">IEC R10 Series</option>
-          <option value="extended">Extended List</option>
-          <option value="custom">Custom Value</option>
-        </select>
-      </div>
+    // --- NEAREST STANDARD RATING ---
+  let stdRating;
+  if (els.ratingMode.value === 'custom') {
+    stdRating = parseFloat(els.customRating.value) || 0;
+  } else if (els.ratingMode.value === 'extended') {
+    stdRating = findNearestStandardRating(calcRating, EXTENDED_RATINGS);
+  } else {
+    stdRating = findNearestStandardRating(calcRating, STANDARD_RATINGS);
+  }
+  els.stdRating.textContent = stdRating;
 
-      <!-- CUSTOM RATING INPUT (hidden by default) -->
-      <div class="row input-row" id="customRatingRow" style="display:none;">
-        <label for="customRating">Custom Transformer Rating (kVA)</label>
-        <span class="eq">=</span>
-        <input type="number" id="customRating" step="1" value="200">
-      </div>
+  // IEC 60076-5 minimum %Z check against selected transformer rating
+  const stdRatingNum = parseFloat(stdRating) || 0;
+  const impedanceZNum = parseFloat(els.impedanceZ.value) || 0;
 
-      <!-- NEAREST STANDARD RATING (output) -->
-      <div class="row output-row highlight">
-        <label>The Nearest Standard Transformer Rating (kVA)</label>
-        <span class="eq">=</span>
-        <output id="stdRating">--</output>
-      </div>
+  if (stdRatingNum > 0 && impedanceZNum > 0) {
+    const minZ = getMinImpedanceZ(stdRatingNum);
+    if (impedanceZNum < minZ) {
+      els.impedanceErrorText.innerHTML =
+        `&#9888; %Z = ${impedanceZNum}% is below IEC 60076-5 minimum of ${minZ}% for a ${stdRatingNum} kVA transformer. Please increase %Z.`;
+      els.impedanceErrorRow.style.display = 'grid';
+    } else {
+      els.impedanceErrorRow.style.display = 'none';
+    }
+  } else {
+    els.impedanceErrorRow.style.display = 'none';
+  }
 
-      <!-- LOADING PERCENTAGE (output) -->
-      <div class="row output-row highlight">
-        <label>Transformer Loading Percentage (%)</label>
-        <span class="eq">=</span>
-        <output id="loadingPct">--</output>
-      </div>
+  // --- TRANSFORMER LOADING PERCENTAGE ---
+  const loadingPct = stdRating > 0 ? (maxApparentPower / stdRating) * 100 : 0;
+  els.loadingPct.textContent = loadingPct.toFixed(1) + '%';
 
-      <!-- STATUS BANNER -->
-      <div class="row status-row">
-        <span id="ratingStatus" class="status-banner neutral">Enter values above to calculate</span>
-      </div>
+  // --- STATUS BANNER ---
+  if (loadingPct <= permissibleLoadPct) {
+    els.ratingStatus.textContent = 'Recommended Transformer Rating';
+    els.ratingStatus.className   = 'status-banner succeed';
+  } else {
+    els.ratingStatus.textContent = 'FAIL — SELECT LARGER RATING';
+    els.ratingStatus.className   = 'status-banner fail';
+  }
+}
 
-    </main>
+// ============================================================
+// INPUT LISTENERS — default-value grey state tracking
+// ============================================================
+document.querySelectorAll('input, select').forEach(el => {
+  el.classList.add('default-value');
+  el.dataset.defaultVal = el.value;
 
-    <footer class="app-footer">
-      <button id="resetBtn" class="btn-secondary">Reset</button>
-      <button id="pdfBtn" class="btn-primary">Export PDF</button>
-    </footer>
+  el.addEventListener('focus', () => {
+    if (el.classList.contains('default-value') && el.tagName === 'INPUT') {
+      el.value = '';
+    }
+  });
 
-    <p class="brand-credit">© maloymiao</p>
+  el.addEventListener('blur', () => {
+    if (el.tagName === 'INPUT' && el.value.trim() === '') {
+      el.value = el.dataset.defaultVal;
+      el.classList.add('default-value');
+      calculate();
+    }
+  });
 
-  </div>
-</div>
+  el.addEventListener('input', () => {
+    el.classList.remove('default-value');
+    calculate();
+  });
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="txsizing-calc.js"></script>
-</body>
-</html>
+  el.addEventListener('change', () => {
+    el.classList.remove('default-value');
+    calculate();
+  });
+});
+
+// ============================================================
+// POWER FACTOR — cap on blur only (allow free typing)
+// ============================================================
+els.powerFactor.addEventListener('blur', () => {
+  let pf = parseFloat(els.powerFactor.value);
+  if (isNaN(pf) || pf < 0.8) {
+    els.powerFactor.value = 0.8;
+  } else if (pf > 1) {
+    els.powerFactor.value = 1;
+  }
+  els.powerFactor.classList.remove('default-value');
+  calculate();
+});
+
+// ============================================================
+// TRANSFORMER TYPE — auto-populate Permissible Loading %
+// ============================================================
+// Cooling class options by transformer type
+const COOLING_CLASSES = {
+  DRY: [
+    { value: 'AN',   label: 'AN — Air Natural' },
+    { value: 'AF',   label: 'AF — Air Forced' },
+    { value: 'ANAF', label: 'ANAF — Natural / Forced' },
+  ],
+  OIL: [
+    { value: 'ONAN', label: 'ONAN — Oil Natural / Air Natural' },
+    { value: 'ONAF', label: 'ONAF — Oil Natural / Air Forced' },
+  ]
+};
+
+// Permissible loading % defaults per cooling class (IEC 60076-11 / 60076-7)
+const COOLING_LOADING_DEFAULTS = {
+  AN:   90,
+  AF:   100,
+  ANAF: 90,
+  ONAN: 80,
+  ONAF: 90,
+};
+
+function updateCoolingClassOptions() {
+  const type    = els.transformerType.value;
+  const options = COOLING_CLASSES[type];
+  els.coolingClass.innerHTML = options
+    .map(o => `<option value="${o.value}">${o.label}</option>`)
+    .join('');
+
+  // Update label to correct IEC standard per transformer type
+  els.coolingClassLabel.textContent = type === 'DRY'
+    ? 'Cooling Class (IEC 60076-11)'
+    : 'Cooling Class (IEC 60076-2)';
+
+  applyCoolingDefaults();
+}
+
+function applyCoolingDefaults() {
+  const cooling    = els.coolingClass.value;
+  const defaultPct = COOLING_LOADING_DEFAULTS[cooling] ?? 90;
+  els.permissibleLoading.value              = defaultPct;
+  els.permissibleLoading.dataset.defaultVal = defaultPct;
+  els.permissibleLoading.classList.add('default-value');
+  calculate();
+}
+
+els.transformerType.addEventListener('change', () => {
+  els.transformerType.classList.remove('default-value');
+  updateCoolingClassOptions();
+});
+
+els.coolingClass.addEventListener('change', () => {
+  els.coolingClass.classList.remove('default-value');
+  applyCoolingDefaults();
+});
+
+// ============================================================
+// RATING MODE — toggle Custom Rating row visibility
+// ============================================================
+els.ratingMode.addEventListener('change', () => {
+  els.customRatingRow.style.display = els.ratingMode.value === 'custom' ? 'grid' : 'none';
+  calculate();
+});
+
+// ============================================================
+// LOGO UPLOAD
+// ============================================================
+els.logoInput.addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    els.logoImg.src = ev.target.result;
+    els.logoImg.classList.remove('hidden');
+    els.logoPlaceholder.classList.add('hidden');
+  };
+  reader.readAsDataURL(file);
+});
+
+// ============================================================
+// ENTER KEY — moves focus to next field (same as Tab)
+// ============================================================
+const focusableInputs = Array.from(
+  document.querySelectorAll('input, select')
+).filter(el => el.closest('[style*="display:none"]') === null);
+
+focusableInputs.forEach((el, index) => {
+  el.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const next = focusableInputs[index + 1];
+      if (next) {
+        next.focus();
+        if (next.tagName === 'INPUT') next.select();
+      }
+    }
+  });
+});
+
+// ============================================================
+// LEADING ZERO FORMAT — .69 becomes 0.69 on blur
+// ============================================================
+document.querySelectorAll('input[type="number"]').forEach(el => {
+  el.addEventListener('blur', () => {
+    const val = parseFloat(el.value);
+    if (!isNaN(val)) {
+      const decimals = (el.value.split('.')[1] || '').length;
+      el.value = decimals > 0 ? val.toFixed(decimals) : val.toFixed(0);
+    }
+  });
+});
+
+// ============================================================
+// RESET
+// ============================================================
+els.resetBtn.addEventListener('click', () => {
+  document.querySelectorAll('input[type="number"]').forEach(el => {
+    el.value = el.defaultValue;
+    el.classList.add('default-value');
+  });
+  els.transformerType.value = 'DRY';
+  els.transformerType.classList.add('default-value');
+  els.ratingMode.value = 'standard';
+  els.ratingMode.classList.add('default-value');
+  els.customRatingRow.style.display = 'none';
+  els.pfErrorRow.style.display      = 'none';
+  els.voltageErrorRow.style.display = 'none';
+  els.impedanceErrorRow.style.display = 'none';
+  els.noLoadErrorRow.style.display = 'none';
+  els.coolingClass.innerHTML = COOLING_CLASSES['DRY']
+  .map(o => `<option value="${o.value}">${o.label}</option>`).join('');
+  els.coolingClass.classList.add('default-value');
+  calculate();
+});
+
+// ============================================================
+// PDF EXPORT — styled report matching Heat Enclosure format
+// ============================================================
+els.pdfBtn.addEventListener('click', () => {
+
+  // Block PDF export if any error banners are visible
+  if (els.voltageErrorRow.style.display   === 'grid' ||
+      els.noLoadErrorRow.style.display    === 'grid' ||
+      els.pfErrorRow.style.display        === 'grid' ||
+      els.impedanceErrorRow.style.display === 'grid') {
+    alert('Please resolve all errors before exporting the report.');
+    return;
+  }
+
+  // Block PDF export if calculation result is not ready
+  if (els.stdRating.textContent === '--' ||
+      els.ratingStatus.textContent === 'Enter values above to calculate') {
+    alert('Please complete all inputs before exporting the report.');
+    return;
+  }
+
+  const { jsPDF } = window.jspdf;
+  const doc       = new jsPDF();
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const margin    = 14;
+  let y = 0;
+
+  const navy      = [26, 82, 118];
+  const green     = [30, 132, 73];
+  const red       = [192, 57, 43];
+  const gold      = [243, 156, 18];
+  const lightGrey = [240, 240, 240];
+
+  const ratingMode = els.ratingMode.value;
+  const ratingSourceLabel = ratingMode === 'custom'   ? 'Custom Value'
+                          : ratingMode === 'extended' ? 'Extended List'
+                          : 'IEC R10 Series';
+  const stdRatingVal  = els.stdRating.textContent;
+  const loadingPctVal = els.loadingPct.textContent;
+  const permissiblePct = parseFloat(els.permissibleLoading.value) || 0;
+  const isPass = els.ratingStatus.classList.contains('succeed');
+
+  // --- HEADER BAND ---
+  doc.setFillColor(...navy);
+  doc.rect(0, 0, pageWidth, 26, 'F');
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(15);
+  doc.setFont(undefined, 'bold');
+  doc.text('DISTRIBUTION TRANSFORMER CALCULATOR', margin, 11);
+  doc.setFontSize(10);
+  doc.setFont(undefined, 'normal');
+  doc.text('Transformer Sizing  |  (MV/LV) Rating Assessment Report', margin, 17);
+  doc.setTextColor(...gold);
+  doc.setFontSize(8.5);
+  const standardsRef = els.transformerType.value === 'DRY'
+  ? 'Standards Reference: IEC 60076-1 (General) / IEC 60076-5 (Short-Circuit) / IEC 60076-11 (Dry-Type)'
+  : 'Standards Reference: IEC 60076-1 (General) / IEC 60076-5 (Short-Circuit) / IEC 60076-2 (Oil-Immersed)';
+  doc.text(standardsRef, margin, 23);
+
+  y = 34;
+
+  // --- REPORT META LINE ---
+  const now     = new Date();
+  const dateStr = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  const timeStr = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
+  doc.setTextColor(40, 40, 40);
+  doc.setFontSize(9);
+  doc.text(`Report Generated: ${dateStr} at ${timeStr}`, margin, y);
+  doc.text(`Standard Rating: ${stdRatingVal} kVA`, pageWidth - margin, y, { align: 'right' });
+  y += 8;
+
+  // --- SECTION HEADER HELPER ---
+  function sectionHeader(title) {
+    doc.setFillColor(...navy);
+    doc.rect(margin, y, pageWidth - margin * 2, 7, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(10);
+    doc.setFont(undefined, 'bold');
+    doc.text(title, margin + 2, y + 5);
+    y += 7;
+  }
+
+  // --- DATA ROW HELPER ---
+  function dataRow(label, value, shaded) {
+    if (shaded) {
+      doc.setFillColor(...lightGrey);
+      doc.rect(margin, y, pageWidth - margin * 2, 6.5, 'F');
+    }
+    doc.setTextColor(40, 40, 40);
+    doc.setFont(undefined, 'normal');
+    doc.setFontSize(9);
+    doc.text(label, margin + 2, y + 4.5);
+    doc.setFont(undefined, 'bold');
+    doc.text(String(value), pageWidth - margin - 2, y + 4.5, { align: 'right' });
+    y += 6.5;
+  }
+
+  // --- INPUT PARAMETERS SECTION ---
+  sectionHeader('INPUT PARAMETERS');
+  dataRow('Primary Rated Voltage (kV)',            els.primaryVoltage.value,     true);
+  dataRow('Secondary Rated Voltage (kV)',          els.secondaryVoltage.value,   false);
+  dataRow('Secondary No Load Voltage (kV)',        els.noLoadVoltage.value,      true);
+  const minZforPDF = getMinImpedanceZ(parseFloat(stdRatingVal) || 0);
+  dataRow('Transformer Impedance Voltage (%Z)', els.impedanceZ.value + '%  (IEC 60076-5 min: ' + minZforPDF + '%)', false);
+  dataRow('Maximum Demand Load (kW)',              els.maxDemandLoad.value,      true);
+  dataRow('Power Factor (PF), after Correction',  els.powerFactor.value,        false);
+  dataRow('Transformer Type',   els.transformerType.value,  true);
+  const coolingStd = els.transformerType.value === 'DRY' ? 'IEC 60076-11' : 'IEC 60076-2';
+  dataRow('Cooling Class (' + coolingStd + ')', els.coolingClass.value, false);
+  dataRow('Permissible Loading Percentage (%)',   permissiblePct + '%',         false);
+  dataRow('Transformer Rating Source',             ratingSourceLabel,            true);
+  y += 3;
+
+  // --- CALCULATION BREAKDOWN SECTION ---
+  sectionHeader('CALCULATION BREAKDOWN');
+  dataRow('Eq.1  Secondary Voltage @ Full Load -- Vfl = Vnl x (1 - %Z/100)',
+          els.secVFullLoad.textContent + ' kV', true);
+  dataRow('Eq.2  Secondary Voltage @ Permissible Loading -- Vp = Vnl x (1 - (%Z/100) x (PL%/100))',
+          els.secVPermissible.textContent + ' kV', false);
+  dataRow('Eq.3  Max. Apparent Power -- S = P (kW) / PF',
+          els.maxApparentPower.textContent + ' kVA', true);
+  dataRow('Eq.4  Calculated Rating -- Scalc = S / (Permissible Loading %)',
+          els.calcRating.textContent + ' kVA', false);
+  dataRow('Eq.5  Loading % -- L = (S / Std Rating) x 100',
+          loadingPctVal, true);
+  y += 3;
+
+  // --- RESULT BANNER ---
+  const bannerColor = isPass ? green : red;
+  doc.setFillColor(...bannerColor);
+  doc.rect(margin, y, pageWidth - margin * 2, 16, 'F');
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(13);
+  doc.setFont(undefined, 'bold');
+  doc.text(
+    `${stdRatingVal} kVA  --  ${els.ratingStatus.textContent}`,
+    pageWidth / 2, y + 10, { align: 'center' }
+  );
+  y += 22;
+
+  doc.setTextColor(60, 60, 60);
+  doc.setFontSize(8);
+  doc.setFont(undefined, 'normal');
+  doc.text(
+    `Criteria: Transformer Loading % must not exceed Permissible Loading % (${permissiblePct}%)`,
+    margin, y
+  );
+  y += 5;
+  doc.text(
+    `Max. Apparent Power = ${els.maxApparentPower.textContent} kVA  |  Loading = ${loadingPctVal}`,
+    margin, y
+  );
+
+  // --- FOOTER ---
+  const footerY = doc.internal.pageSize.getHeight() - 20;
+  doc.setDrawColor(200, 200, 200);
+  doc.line(margin, footerY - 4, pageWidth - margin, footerY - 4);
+  doc.setFontSize(8.5);
+  doc.setFont(undefined, 'bold');
+  doc.setTextColor(...navy);
+  doc.text('Distribution Transformer Calculator  © maloymiao', pageWidth / 2, footerY, { align: 'center' });
+  doc.setFont(undefined, 'normal');
+  doc.setFontSize(7.5);
+  doc.setTextColor(100, 100, 100);
+  doc.text('Queries: contact@maloymiao.com', pageWidth / 2, footerY + 4.5, { align: 'center' });
+  doc.text('This report is generated for preliminary sizing reference only.', pageWidth / 2, footerY + 9, { align: 'center' });
+
+  // --- FILENAME: TransformerSizing_maloymiao_YYYYMMDD_HHmm ---
+  const year    = String(now.getFullYear());
+  const month   = String(now.getMonth() + 1).padStart(2, '0');
+  const day     = String(now.getDate()).padStart(2, '0');
+  const hours   = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  const stamp   = `${year}${month}${day}_${hours}${minutes}`;
+  doc.save(`TransformerSizing_maloymiao_${stamp}.pdf`);
+});
+
+// ============================================================
+// INITIAL LOAD
+// ============================================================
+calculate();
