@@ -378,14 +378,25 @@ function drawNativeGraph(points, factoryEfficiencies, fieldEfficiencies, analysi
         ctx.fillText(val.toFixed(2) + '%', 35, y + 4);
     }
 
-    // Vertical Grid Lines (10% Step Intervals)
+    // Adaptive Vertical Grid Lines (Skips labels on narrow mobile viewports to prevent layout overlapping)
+    const isMobileWidth = width < 480; 
+    
     for (let xVal = 10; xVal <= 100; xVal += 10) {
         const x = getXPixel(xVal);
         ctx.beginPath();
         ctx.moveTo(x, paddingTop);
         ctx.lineTo(x, height - paddingBottom);
         ctx.stroke();
-        ctx.fillText(xVal + '%', x - 10, height - paddingBottom + 20);
+        
+        // If on mobile layout screen, only draw text strings for even intervals (20%, 40%, 60%, 80%, 100%)
+        if (isMobileWidth) {
+            if (xVal % 20 === 0) {
+                ctx.fillText(xVal + '%', x - 10, height - paddingBottom + 20);
+            }
+        } else {
+            // Standard layout displays all 10% interval ticks on desktop monitors
+            ctx.fillText(xVal + '%', x - 10, height - paddingBottom + 20);
+        }
     }
 
     // LINE A DRAWING: Pristine Factory FAT Nameplate Curve (Dotted Baseline)
