@@ -17,16 +17,27 @@
     </div>
 
     <div class="container">
-        <header style="position: relative;">
-            <h1>Transformer Efficiency & Losses Analyzer</h1>
-            <p>Calculate multi-load profiles and pinpoint the exact peak operation coordinates</p>
-            
-            <!-- Dynamic Theme Mode Switch Button Interface Control -->
-            <button id="themeToggleBtn" onclick="toggleDashboardTheme()" style="position: absolute; top: 1.5rem; right: 2rem; width: auto; padding: 6px 14px; font-size: 13px; font-weight: 600; background-color: #cbd5e1; color: #1e293b; border-radius: 20px; border: none; cursor: pointer; transition: all 0.2s;">
-                🌙 Dark Mode
-            </button>
-        </header>
+     
+        <header style="background-color: #0b1523; padding: 1.5rem 2rem 2.5rem 2rem; position: relative; box-sizing: border-box; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05);">
+    
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 2rem;">
+                <a href="index.html" style="color: #64748b; text-decoration: none; font-size: 0.95rem; font-weight: 700; transition: color 0.2s; display: inline-flex; align-items: center; gap: 6px;">
+                    &larr; Back to Portfolio Home
+                </a>
+                <button id="themeToggleBtn" onclick="toggleDashboardTheme()" style="width: auto; padding: 6px 14px; font-size: 13px; font-weight: 600; background-color: #cbd5e1; color: #1e293b; border-radius: 20px; border: none; cursor: pointer; transition: all 0.2s;">
+                    ☀️ Light Mode
+                </button>
+            </div>
 
+             <div style="width: 100%;">
+                <h1 style="color: #ffffff; font-size: 2.2rem; font-weight: 800; margin: 0 0 0.6rem 0; font-family: system-ui, sans-serif; letter-spacing: -0.5px;">
+                    Transformer Efficiency & Losses Analyzer
+                </h1>
+                <p style="color: #94a3b8; font-size: 1rem; margin: 0; font-weight: 500; font-family: system-ui, sans-serif;">
+                    Calculate multi-load profiles and pinpoint the exact peak operation coordinates
+                </p>
+            </div>
+        </header>
         
         <div class="grid">
             <!-- LEFT PANEL: All inputs, dropdowns, and results housed inside ONE card -->
