@@ -379,7 +379,11 @@ function drawNativeGraph(points, factoryEfficiencies, fieldEfficiencies, analysi
     }
 
     // Adaptive Vertical Grid Lines (Skips labels on narrow mobile viewports to prevent layout overlapping)
-    const isMobileWidth = width < 480; 
+    const isMobileWidth = width < 500; 
+    
+    // Set text alignment to center to ensure proper balancing on mobile screens
+    ctx.textAlign = 'center';
+    ctx.font = isMobileWidth ? '9px sans-serif' : '11px sans-serif'; // Use smaller text on phone screens
     
     for (let xVal = 10; xVal <= 100; xVal += 10) {
         const x = getXPixel(xVal);
@@ -388,16 +392,19 @@ function drawNativeGraph(points, factoryEfficiencies, fieldEfficiencies, analysi
         ctx.lineTo(x, height - paddingBottom);
         ctx.stroke();
         
-        // If on mobile layout screen, only draw text strings for even intervals (20%, 40%, 60%, 80%, 100%)
         if (isMobileWidth) {
+            // Only draw text labels for 20%, 40%, 60%, 80%, 100% on phone layouts
             if (xVal % 20 === 0) {
-                ctx.fillText(xVal + '%', x - 10, height - paddingBottom + 20);
+                ctx.fillText(xVal + '%', x, height - paddingBottom + 18);
             }
         } else {
-            // Standard layout displays all 10% interval ticks on desktop monitors
-            ctx.fillText(xVal + '%', x - 10, height - paddingBottom + 20);
+            // Standard layout displays all 10% increments on desktop monitors
+            ctx.fillText(xVal + '%', x, height - paddingBottom + 20);
         }
     }
+    
+    // IMPORTANT: Reset text alignment back to center for standard safety
+    ctx.textAlign = 'center';
 
     // LINE A DRAWING: Pristine Factory FAT Nameplate Curve (Dotted Baseline)
     ctx.strokeStyle = isDark ? '#64748b' : '#94a3b8';
