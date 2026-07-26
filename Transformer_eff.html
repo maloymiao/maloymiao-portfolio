@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transformer Efficiency Profile Analyzer</title>
+    <!-- Linked external style rules sheet -->
+    <link rel="stylesheet" href="tx_eff_style.css">
+</head>
+<body>
+
+    <div class="nav-control-header" style="position: fixed !important; top: 20px !important; left: 20px !important; z-index: 999999 !important; width: auto !important; background: transparent !important;">
+        <a href="index.html" class="back-home-link" style="font-family: 'Nunito', sans-serif !important; font-size: 16px !important; font-weight: 700 !important; color: #ffffff !important; text-decoration: underline !important;">&larr; Back to Portfolio Home</a>
+    </div>
+
+    <div class="container">
+        <header style="position: relative;">
+            <h1>Transformer Efficiency & Losses Analyzer</h1>
+            <p>Calculate multi-load profiles and pinpoint the exact peak operation coordinates</p>
+            
+            <!-- Dynamic Theme Mode Switch Button Interface Control -->
+            <button id="themeToggleBtn" onclick="toggleDashboardTheme()" style="position: absolute; top: 10px; right: 10px; width: auto; padding: 6px 14px; font-size: 13px; font-weight: 600; background-color: #cbd5e1; color: #1e293b; border-radius: 20px; border: none; cursor: pointer; transition: all 0.2s;">
+                🌙 Dark Mode
+            </button>
+        </header>
+
+        
+        <div class="grid">
+            <!-- LEFT PANEL: All inputs, dropdowns, and results housed inside ONE card -->
+            <div class="card">
+                <h2>Parameters</h2>
+                <form id="transformerForm">
+                    <!-- 1. Transformer Capacity Input -->
+                    <div class="form-group">
+                        <label for="capacity">Transformer Rating (kVA)</label>
+                        <input type="number" id="capacity" value="200" min="1" step="any" required>
+                    </div>
+
+                    <!-- Insert directly below the Transformer Capacity input field group -->
+                    <div class="form-group">
+                        <label for="analysisMode">Analysis Assessment Mode</label>
+                        <select id="analysisMode" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 15px; font-family: inherit; margin-bottom: 10px;" onchange="toggleAnalysisMode()">
+                            <option value="FACTORY" selected>Factory Design / FAT Nameplate Profile</option>
+                            <option value="FIELD_AUDIT">In-Service Transformer Condition Assessment</option>
+                        </select>
+                    </div>
+
+                    <!-- Field Diagnostic Inputs Container (Hidden by default) -->
+                    <div id="fieldDiagnosticInputs" style="display: none; padding: 12px; background-color: #f0fdf4; border-radius: 8px; border: 1px solid #bbf7d0; margin-bottom: 18px;">
+                        <h4 style="margin: 0 0 10px 0; color: #166534; font-size: 13px;">⚡ Active Field Operating Parameters</h4>
+    
+                    <div class="form-group" style="margin-bottom: 10px;">
+                        <label for="presentLoadKva" style="font-size: 12px; color: #475569;">Actual Operating Demand (Active kVA Load)</label>
+                        <input type="number" id="presentLoadKva" value="100" min="0" step="any" style="padding: 6px 10px; font-size: 14px;">
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 10px;">
+                        <label for="coolingType" style="font-size: 12px; color: #475569;">Insulation / Cooling Configuration Type</label>
+                        <select id="coolingType" onchange="calculateAndPlot()" style="padding: 6px 10px; font-size: 14px; width: 100%; background-color: var(--card-bg); color: var(--text); border: 1px solid var(--border); border-radius: 6px;">
+                            <option value="OIL_FILLED" selected>Liquid-Immersed (Oil-Cooled / ONAN / ONAF)</option>
+                            <option value="DRY_TYPE">Dry-Type (Air-Cooled / Cast Resin / AN)</option>
+                        </select>
+                    </div>
+    
+                    <div class="form-group" style="margin-bottom: 5px;">
+                        <label for="assetAge" style="font-size: 12px; color: #475569;">Asset In-Service Age (Years in Operation)</label>
+                        <select id="assetAge" style="padding: 6px 10px; font-size: 14px; width: 100%; background-color: var(--card-bg); color: var(--text); border: 1px solid var(--border); border-radius: 6px;">
+                            <option value="1.0" selected>New / Under 3 Years (No Correction)</option>
+                            <option value="1.05">3 to 8 Years (+5% Copper Resistance Aging Factor)</option>
+                            <option value="1.12">8 to 15 Years (+12% Copper Resistance Aging Factor)</option>
+                            <option value="1.20">Over 15 Years (+20% Severe Degradation Thermal Factor)</option>
+                        </select>
+                    </div>
+                </div>
+
+                    <!-- 2. Compliance Dropdown & Citation Box -->
+                    <div class="form-group">
+                        <label for="standardRule">Compliance Validation Standard</label>
+                        <select id="standardRule" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 15px; font-family: inherit;">
+                            <option value="IEC_TIER2">IEC 60076-20 (Tier 2 High-Efficiency Core Limits)</option>
+                            <option value="IEEE_C57">IEEE C57.12.00 (Standard Industrial Baseline Limits)</option>
+                        </select>
+                        
+                        <!-- Citation widget directly beneath the standard choice -->
+                        <div id="standardCitationWrapper" style="margin-top: 12px; padding: 12px; background-color: #f1f5f9; border-radius: 8px; border: 1px solid var(--border);">
+                            <div style="display: flex; align-items: center; margin-bottom: 6px; gap: 8px; flex-wrap: wrap;">
+                                <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; background-color: #cbd5e1; color: #334155; padding: 3px 8px; border-radius: 4px; display: inline-block;">
+                                    Official Source
+                                </span>
+                                <a id="standardCitationLink" href="https://taishantransformer.com" target="_blank" style="color: var(--primary); font-size: 13px; font-weight: 600; text-decoration: underline;">
+                                    IEC 60076-20 Efficiency Standard Specifications
+                                </a>
+                            </div>
+                            <p id="standardSummaryText" style="margin: 0; font-size: 12.5px; color: #475569; line-height: 1.4;">
+                                This standard defines strict global eco-design energy efficiency limits. It enforces low maximum allowable limits for both core (no-load) and winding (load) losses to reduce environmental carbon footprints across modern electricity distribution networks.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- 3. No-Load Loss Input -->
+                    <div class="form-group">
+                        <label for="ironLoss">100% No-Load Loss / Iron Loss (W)</label>
+                        <input type="number" id="ironLoss" value="300" min="1" step="any" required>
+                    </div>
+
+                    <!-- 4. Full-Load Loss Input -->
+                    <div class="form-group">
+                        <label for="copperLoss">100% Load Loss / Copper Loss (W)</label>
+                        <input type="number" id="copperLoss" value="2200" min="1" step="any" required>
+                    </div>
+
+                    <!-- 5. System Power Factor Dropdown -->
+                    <div class="form-group">
+                        <label for="powerFactorPreset">System Power Factor (cos φ)</label>
+                        <select id="powerFactorPreset" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 15px; font-family: inherit; margin-bottom: 10px;" onchange="toggleCustomPfField()">
+                            <option value="1.0" selected>Purely Resistive / Unity (1.0)</option>
+                            <option value="0.85">Standard Industrial Load (0.85)</option>
+                            <option value="0.80">Commercial Baseline (0.80)</option>
+                            <option value="0.70">Heavy Induction / Motors (0.70)</option>
+                            <option value="CUSTOM">Custom Value...</option>
+                        </select>
+                        
+                        <div id="customPfWrapper" style="display: none;">
+                            <label for="powerFactor" style="font-size: 12px; color: #64748b; margin-top: 5px;">Enter Custom Power Factor</label>
+                            <input type="number" id="powerFactor" value="1.0" min="0.1" max="1.0" step="0.01">
+                        </div>
+                    </div>
+
+                    <button type="submit" style="margin-bottom: 20px;">Generate Curve & Analytics</button>
+                </form>
+
+                <!-- Peak Efficiency Summary Stays inside the parameters card panel -->
+                <div id="peakSummary" class="results-box" style="display: none;">
+                    <h3>✨ Peak Efficiency Target</h3>
+                    <p><strong>Max Efficiency:</strong> <span id="maxEffVal">0.00</span>%</p>
+                    <p><strong>Optimal Load Ratio:</strong> <span id="maxEffLoad">0.00</span>%</p>
+                    <p><strong>Required Power Demand:</strong> <span id="maxEffKva">0.00</span> kVA</p>
+                </div>
+                    <div id="pdfExportContainer" style="margin-top: 15px; padding-top: 12px; border-top: 1px dashed var(--border);">
+                        <button type="button" id="downloadPdfBtn" onclick="generatePdfReport()" style="width: 100%; padding: 10px 14px; font-size: 14px; font-weight: 600; background-color: #10b981; color: white; border: none; border-radius: 6px; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                            📄 Export Engineering PDF Report
+                        </button>
+                    </div>
+                    <div id="reportFooterGroup" style="margin-top: 35px;">
+                    
+                    <div style="border-top: 1px solid var(--border); padding-top: 15px; text-align: center; font-size: 12px; color: #94a3b8; font-weight: 500; letter-spacing: 0.03em; margin-bottom: 12px;">
+                        © maloymiao
+                    </div>
+                        <div style="font-size: 11px; color: #64748b; text-align: center; max-width: 500px; margin-left: auto; margin-right: auto; line-height: 1.4; padding-top: 10px; border-top: 1px dashed var(--border);">
+                            <strong>Engineering Disclaimer:</strong> This application is an educational pre-diagnostic analysis tool. All loss curves and standard compliance references are calculated using mathematical approximations of general industrial baselines. Official grid equipment certification must be verified against localized utility test data and physical instruments. Standard citations link directly to official third-party references.
+                        </div>
+                    </div>
+                </div>
+
+            <!-- RIGHT PANEL: Stays completely clean for visual analysis charts and tables -->
+            <div class="card">
+                <h2>Efficiency Curve Analysis</h2>
+                <div style="position: relative; width: 100%; height: 350px; margin-bottom: 20px;">
+                    <canvas id="efficiencyChart"></canvas>
+                </div>
+                
+                <div class="table-container">
+                    <h3>Calculated Load Profile Table</h3>
+                    <table id="dataTable">
+                        <thead>
+                            <tr>
+                                <th>Load Target (%)</th>
+                                <th>Operational Power (VA)</th>
+                                <th>Iron Loss (W)</th>
+                                <th>Copper Loss (W)</th>
+                                <th>Calculated Efficiency</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <!-- Paste directly underneath the closing table tag on the right side card -->
+                    <div id="engineeringConclusionBox" style="margin-top: 25px; padding: 18px; background-color: #f8fafc; border-radius: 8px; border: 1px solid var(--border); display: none;">
+                        <h3 style="margin: 0 0 10px 0; color: #0f172a; display: flex; align-items: center; gap: 6px;">
+                            📊 Engineering Insight & Operational Guidance
+                        </h3>
+                        <p id="conclusionText" style="margin: 0; font-size: 13.5px; color: #334155; line-height: 1.5;">
+                            Generating operational recommendations...
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Linked decoupled javascript file logic script -->
+    <script src="tx_eff_app.js"></script>
+</body>
+</html>
