@@ -112,12 +112,34 @@
                 </div>
 
                 <!-- App Link Card 3: Distribution Transformer Sizing -->
-                            <!-- Application Link Card 3: Transformer Sizing -->
                 <div class="app-link-card">
                     <div class="card-badge bg-request" style="background-color: #1c5275; color: #ffffff; display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 1rem;">Power Systems</div>
                     <h3>Transformer Sizing Utility</h3>
                     <p>Compute distribution transformer kVA ratings dynamically. Inputs nominal system voltages, target loads, and impedance parameters to calculate real-time electrical metrics and standard IEC rating matches.</p>
                     <a href="txsizing-calc.html" class="btn btn-app-link btn-request">Launch Application &rarr;</a>
+                </div>
+                    
+                <!-- Application Link Card 4: Transformer Efficiency -->
+                <div class="app-link-card">
+                    <div class="card-badge" style="background-color: #0f4c81; color: #ffffff; display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 1rem;">Power Analytics</div>
+                    <h3>Transformer Efficiency & Losses Analysis</h3>
+                    <p>Evaluate core losses, copper losses, and operational efficiencies under varying load steps and power factors. Computes optimal loading points based on custom transformer testing logs.</p>
+                    <a href="#" onclick="openSpaApplication('panel-efficiency-calc'); return false;" class="btn btn-app-link" style="background-color: #0f4c81;">Launch Application &rarr;</a>
+                </div>
+
+                <!-- Application Link Card 5: In-Progress Placeholder -->
+                <div class="app-link-card" style="border: 2px dashed #cbd5e1; background: rgba(248, 250, 252, 0.6); opacity: 0.85;">
+                    <div class="card-badge" style="background-color: #f29c11; color: #ffffff; display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 1rem;">Development</div>
+                    <h3 style="color: #64748b;">On-going In-progress Application</h3>
+                    <p style="color: #94a3b8;">A new automation calculation utility is currently undergoing algorithm modeling and layout alignment optimizations. Engineering calculations rolling out soon.</p>
+                    <button class="btn btn-app-link" style="background-color: #64748b; cursor: not-allowed; opacity: 0.6;" disabled>System Coding...</button>
+                </div>
+
+                <!-- Application Link Card 6: Future Slot Placeholder -->
+                <div class="app-link-card" style="border: 2px dashed #e2e8f0; background: transparent; opacity: 0.6; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 250px;">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem; color: #94a3b8;">🔧</div>
+                    <h3 style="color: #94a3b8; font-size: 1.1rem; text-align: center;">For Future Application Slot</h3>
+                    <p style="color: #cbd5e1; font-size: 0.85rem; text-align: center; max-width: 80%;">Reserved space for future system digitization profiles.</p>
                 </div>
             </div>
         </div>
@@ -164,6 +186,20 @@
     <footer>
         <p>&copy; 2026 maloymiao. All rights reserved.</p>
     </footer>
+        
+    <!-- ========================================== -->
+    <!-- 📊 4TH APP SPA LAYER STORAGE CONTAINER     -->
+    <!-- ========================================== -->
+    <main id="app-workspace-layer" style="display: none !important; opacity: 0; pointer-events: none; padding-top: 80px; min-height: 100vh; background-color: #f8fafc;">
+        <div class="section-container" style="max-width: 1200px; margin: 0 auto; padding: 2rem 1rem;">
+            
+            <div id="panel-efficiency-calc" class="spa-app-panel" style="display: none;">
+                <!-- 🚀 PASTE YOUR RAW 4TH APP HTML FORMS & CODES DIRECTLY HERE -->
+                <h2 style="color: #0f172a; margin-bottom: 1.5rem;">📊 Transformer Efficiency & Losses Analysis</h2>
+            </div>
+
+        </div>
+    </main>
 
     <script src="script.js"></script>
 </body>

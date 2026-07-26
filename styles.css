@@ -669,3 +669,12 @@ footer {
     gap: 3.5rem;
     flex-wrap: wrap;
 }
+
+/* Updated 3-Column Multi-Row Layout Matrix */
+.apps-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important; /* Locks columns to 3 per row */
+    gap: 2rem !important; 
+    width: 100% !important;
+    margin-top: 2rem;
+}
