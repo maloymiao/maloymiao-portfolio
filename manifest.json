@@ -1,0 +1,31 @@
+{
+  "name": "Maloy Miao \u2014 Electrical Engineering Tools",
+  "short_name": "MaloyMiao",
+  "description": "Electrical engineering calculators and design tools: transformer efficiency, battery sizing, transformer sizing, and short-circuit fault analysis.",
+  "start_url": "/index.html",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0b1523",
+  "theme_color": "#0b1523",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
