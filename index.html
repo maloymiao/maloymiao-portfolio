@@ -185,10 +185,88 @@
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2026 maloymiao. All rights reserved.</p>
+    <!-- ========================================== -->
+    <!-- 🏢 PROFESSIONAL MULTI-COLUMN CORPORATE FOOTER -->
+    <!-- ========================================== -->
+    <footer style="background-color: #0b1320; color: #94a3b8; padding: 4rem 2rem 2rem 2rem; font-family: system-ui, -apple-system, sans-serif; border-top: 1px solid rgba(255,255,255,0.05); box-sizing: border-box; width: 100%;">
+        
+        <!-- Top Multi-Column Grid Layout Row -->
+        <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2.5rem; padding-bottom: 3rem; border-bottom: 1px solid rgba(255,255,255,0.05);">
+            
+            <!-- Column 1: Core Navigation Profile -->
+            <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+                <h4 style="color: #ffffff; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.4rem;">Profile</h4>
+                <a href="#about" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;">About Narrative</a>
+                <a href="https://linkedin.com/in/marlon-cabargada-51784a113/" target="_blank" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;">LinkedIn Network</a>
+                <a href="#contact" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;">Consultation Intake</a>
+            </div>
+
+            <!-- Column 2: Digital Automation Tools -->
+            <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+                <h4 style="color: #ffffff; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.4rem;">Automation Tools</h4>
+                <a href="calculator.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;">Heat Enclosure Calculator</a>
+                <a href="battery-calculator.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;">Battery Sizing Engine</a>
+                <a href="txsizing-calc.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;">Transformer kVA Sizer</a>
+                <a href="Transformer_eff.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;">Efficiency Analytics</a>
+            </div>
+
+            <!-- Column 3: Industry Design Criteria -->
+            <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+                <h4 style="color: #ffffff; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.4rem;">Design Criteria</h4>
+                <span onclick="openNemaModal()" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem; transition: color 0.2s; cursor: pointer;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='#94a3b8'">NEMA Sizing Code</span>
+                <span onclick="openIecModal()" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem; transition: color 0.2s; cursor: pointer;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='#94a3b8'">IEC 60076 Regulations</span>
+                <a href="#applications" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;">Custom App Request</a>
+            </div>
+
+            <!-- Column 4: Localization & Global Reach -->
+            <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+                <h4 style="color: #ffffff; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.4rem;">Localization</h4>
+                
+                <!-- 🌐 Dynamic Google Translate Native Integration Element Box -->
+                <div id="google_translate_element" style="margin-top: 0.2rem;"></div>
+                <span style="font-size: 0.75rem; color: #64748b; line-height: 1.4; margin-top: 0.2rem;">Select language to dynamically translate calculation matrices instantly.</span>
+            </div>
+
+        </div>
+
+        <!-- Bottom Baseline Sub-Footer Copyright Row -->
+        <div style="max-width: 1200px; margin: 0 auto; padding-top: 1.5rem; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; font-size: 0.8rem; color: #64748b;">
+            <div>
+                &copy; 2026 maloymiao. All rights reserved. | <span style="color: #334155; font-size: 0.75rem;">Build Profile 39542</span>
+            </div>
+            <div style="display: flex; gap: 1.5rem;">
+                <!-- 🌟 THE CHANGED LINK: Connects the text row to your modal animation popup -->
+                <span onclick="openPrivacyModal()" style="cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='#64748b'">Privacy Policy</span>
+                
+                <!-- New Entries -->
+                <span onclick="openSecurityModal()" style="cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='#64748b'">Security Policy</span>
+                <span onclick="openQualityModal()" style="cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='#64748b'">Quality Policy</span> 
+                
+                <!-- 🌟 THE CHANGED LINK: Connects the text row to your terms modal animation popup -->
+                <span onclick="openTermsModal()" style="cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='#64748b'">Terms of Use</span>
+                
+                <span onclick="openCopyrightModal()" style="cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='#64748b'">Trademark & Copyright</span>
+
+                <!-- 🌟 THE CHANGED LINK: Connects the text row to your disclaimer modal animation popup -->
+                <span onclick="openDisclaimerModal()" style="cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='#64748b'">Engineering Disclaimer</span>
+
+            </div>
+        </div>
     </footer>
+
+    <!-- 🌐 Automatic Google Translate Initialization Script Injection Link -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+            }, 'google_translate_element');
+        }
+    </script>
+    <!-- 🌟 OPTIMIZED REFERENCE: Explicitly adding https: secures network handshakes -->
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+
         
     <!-- ========================================== -->
     <!-- 📊 4TH APP SPA LAYER STORAGE CONTAINER     -->
@@ -212,5 +290,419 @@
         });
       }
     </script>
+
+    <!-- ========================================== -->
+    <!-- 🔒 PRIVACY POLICY INTERACTIVE MODAL OVERLAY -->
+    <!-- ========================================== -->
+    <div id="privacy-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(11, 19, 32, 0.85); z-index: 99999; backdrop-filter: blur(8px); align-items: center; justify-content: center; padding: 1.5rem; box-sizing: border-box;">
+        <div style="background-color: #ffffff; color: #334155; width: 100%; max-width: 650px; max-height: 80vh; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); display: flex; flex-direction: column; overflow: hidden; font-family: system-ui, -apple-system, sans-serif;">
+            
+            <!-- Modal Sticky Top Branding Header Bar -->
+            <div style="background-color: #0b1320; color: #ffffff; padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="margin: 0; font-size: 1.1rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;">Privacy Policy</h3>
+                <button onclick="closePrivacyModal()" style="background: transparent; border: none; color: #94a3b8; font-size: 1.5rem; cursor: pointer; font-weight: 300; transition: color 0.2s;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='#94a3b8'">&times;</button>
+            </div>
+
+            <!-- Scrollable Legal Notice Content Workspace -->
+            <div style="padding: 1.5rem; overflow-y: auto; font-size: 0.95rem; line-height: 1.6; display: flex; flex-direction: column; gap: 1.2rem;">
+                <p style="margin: 0; color: #64748b; font-size: 0.85rem; font-weight: 600;">Last Updated: August 2026</p>
+                <p style="margin: 0;">Welcome to <strong>maloymiao.com</strong>. Your privacy is paramount. This statement outlines how data is tracked and secured across our digital engineering platform.</p>
+                
+                <div>
+                    <h4 style="color: #0b1320; margin: 0 0 0.4rem 0; font-size: 1rem; font-weight: 700;">1. Information Collection</h4>
+                    <p style="margin: 0;">We only collect personal information (such as names, corporate emails, and text descriptions) that you explicitly provide when filling out our contact intake sheets or app digitization request blocks.</p>
+                </div>
+
+                <div>
+                    <h4 style="color: #0b1320; margin: 0 0 0.4rem 0; font-size: 1rem; font-weight: 700;">2. Data Usage & Processing</h4>
+                    <p style="margin: 0;">Your technical variables are used strictly to evaluate, communicate, and automate your engineering worksheets. We do not sell, rent, or lease your personal information to third-party marketing vectors.</p>
+                </div>
+
+                <div>
+                    <h4 style="color: #0b1320; margin: 0 0 0.4rem 0; font-size: 1rem; font-weight: 700;">3. Third-Party Forms Handling</h4>
+                    <p style="margin: 0;">Data transmission is handled securely by our integrated backend server handler, Formspree. All communications are securely encrypted using standard HTTPS network handshakes.</p>
+                </div>
+
+                <div>
+                    <h4 style="color: #0b1320; margin: 0 0 0.4rem 0; font-size: 1rem; font-weight: 700;">4. Engineering Calculation Security</h4>
+                    <p style="margin: 0;">All computational logic models (like transformer weights or battery calculations) run directly inside your local web browser sandbox. No operational variables are cached on our host networks.</p>
+                </div>
+            </div>
+
+            <!-- Modal Bottom Sticky Control Confirmation Footer Bar -->
+            <div style="background-color: #f8fafc; padding: 1rem 1.5rem; border-top: 1px solid #e2e8f0; display: flex; justify-content: flex-end;">
+                <button onclick="closePrivacyModal()" style="background-color: #0b1320; color: #ffffff; border: none; padding: 0.6rem 1.5rem; font-size: 0.9rem; font-weight: 600; border-radius: 6px; cursor: pointer; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">Close Statement</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ⚙️ JavaScript Modal Interface Visibility Toggles -->
+    <script>
+        function openPrivacyModal() {
+            const modal = document.getElementById('privacy-modal');
+            if (modal) {
+                modal.style.display = 'flex';
+                document.body.style.overflow = 'hidden'; /* Stops the main website from scrolling in background */
+            }
+        }
+        function closePrivacyModal() {
+            const modal = document.getElementById('privacy-modal');
+            if (modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto'; /* Restores homepage scrolling */
+            }
+        }
+    </script>
+
+    <!-- ========================================== -->
+    <!-- ⚖️ TERMS OF USE INTERACTIVE MODAL OVERLAY   -->
+    <!-- ========================================== -->
+    <div id="terms-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(11, 19, 32, 0.85); z-index: 99999; backdrop-filter: blur(8px); align-items: center; justify-content: center; padding: 1.5rem; box-sizing: border-box;">
+        <div style="background-color: #ffffff; color: #334155; width: 100%; max-width: 650px; max-height: 80vh; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); display: flex; flex-direction: column; overflow: hidden; font-family: system-ui, -apple-system, sans-serif;">
+            
+            <!-- Modal Sticky Top Branding Header Bar -->
+            <div style="background-color: #0b1320; color: #ffffff; padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="margin: 0; font-size: 1.1rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;">Terms of Use</h3>
+                <button onclick="closeTermsModal()" style="background: transparent; border: none; color: #94a3b8; font-size: 1.5rem; cursor: pointer; font-weight: 300; transition: color 0.2s;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='#94a3b8'">&times;</button>
+            </div>
+
+            <!-- Scrollable Legal Notice Content Workspace -->
+            <div style="padding: 1.5rem; overflow-y: auto; font-size: 0.95rem; line-height: 1.6; display: flex; flex-direction: column; gap: 1.2rem;">
+                <p style="margin: 0; color: #64748b; font-size: 0.85rem; font-weight: 600;">Last Updated: August 2026</p>
+                <p style="margin: 0;">By accessing and using <strong>maloymiao.com</strong> and its digital calculation applications, you agree to comply with and be bound by the following terms and conditions.</p>
+                
+                <div>
+                    <h4 style="color: #0b1320; margin: 0 0 0.4rem 0; font-size: 1rem; font-weight: 700;">1. Engineering Estimates & Disclaimer</h4>
+                    <p style="margin: 0;">All automated calculation utilities (including transformer sizing & efficiency, battery capacities, and heat enclosure parameters) are provided strictly as conceptual design estimators. These outputs do not replace formal, verified engineering computations or field inspections.</p>
+                </div>
+
+                <div>
+                    <h4 style="color: #0b1320; margin: 0 0 0.4rem 0; font-size: 1rem; font-weight: 700;">2. Permitted Use</h4>
+                    <p style="margin: 0;">Users are granted a non-exclusive license to use these web tools for individual evaluation or professional calculation checks. Reverse engineering the math script arrays or cloning the layout for commercial resale is strictly prohibited.</p>
+                </div>
+
+                <div>
+                    <h4 style="color: #0b1320; margin: 0 0 0.4rem 0; font-size: 1rem; font-weight: 700;">3. Limitation of Liability</h4>
+                    <p style="margin: 0;">In no event shall maloymiao or its developers be held liable for mechanical breakdowns, hardware failures, project budget drops, or regulatory non-compliance arising from the direct application of website calculation outputs.</p>
+                </div>
+            </div>
+
+            <!-- Modal Bottom Sticky Control Confirmation Footer Bar -->
+            <div style="background-color: #f8fafc; padding: 1rem 1.5rem; border-top: 1px solid #e2e8f0; display: flex; justify-content: flex-end;">
+                <button onclick="closeTermsModal()" style="background-color: #0b1320; color: #ffffff; border: none; padding: 0.6rem 1.5rem; font-size: 0.9rem; font-weight: 600; border-radius: 6px; cursor: pointer; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">Accept & Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ⚙️ JavaScript Modal Interface Visibility Toggles -->
+    <script>
+        function openTermsModal() {
+            const modal = document.getElementById('terms-modal');
+            if (modal) {
+                modal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            }
+        }
+        function closeTermsModal() {
+            const modal = document.getElementById('terms-modal');
+            if (modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        }
+    </script>
+
+    <!-- ========================================== -->
+    <!-- ⚙️ ENGINEERING DISCLAIMER MODAL OVERLAY     -->
+    <!-- ========================================== -->
+    <div id="disclaimer-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(11, 19, 32, 0.85); z-index: 99999; backdrop-filter: blur(8px); align-items: center; justify-content: center; padding: 1.5rem; box-sizing: border-box;">
+        <div style="background-color: #ffffff; color: #334155; width: 100%; max-width: 650px; max-height: 80vh; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); display: flex; flex-direction: column; overflow: hidden; font-family: system-ui, -apple-system, sans-serif;">
+            
+            <!-- Modal Sticky Top Branding Header Bar -->
+            <div style="background-color: #0b1320; color: #ffffff; padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="margin: 0; font-size: 1.1rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;">Engineering Disclaimer</h3>
+                <button onclick="closeDisclaimerModal()" style="background: transparent; border: none; color: #94a3b8; font-size: 1.5rem; cursor: pointer; font-weight: 300; transition: color 0.2s;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='#94a3b8'">&times;</button>
+            </div>
+
+            <!-- Scrollable Legal Notice Content Workspace -->
+            <div style="padding: 1.5rem; overflow-y: auto; font-size: 0.95rem; line-height: 1.6; display: flex; flex-direction: column; gap: 1.2rem;">
+                <p style="margin: 0; color: #64748b; font-size: 0.85rem; font-weight: 600;">Last Updated: August 2026</p>
+                <p style="margin: 0; font-weight: 700; color: #dc2626;">IMPORTANT NOTICE TO ALL USERS, FIELD INSPECTORS, AND CONSULTANTS:</p>
+                
+                <div>
+                    <h4 style="color: #0b1320; margin: 0 0 0.4rem 0; font-size: 1rem; font-weight: 700;">1. No Professional Relationship</h4>
+                    <p style="margin: 0;">The use of the calculations, web applications, and automated forms available on <strong>maloymiao.com</strong> does not establish an engineer-client consultation relationship. The computational engines are standalone reference engines only.</p>
+                </div>
+
+                <div>
+                    <h4 style="color: #0b1320; margin: 0 0 0.4rem 0; font-size: 1rem; font-weight: 700;">2. Accuracy of Mathematical Approximations</h4>
+                    <p style="margin: 0;">While all scripts have been rigorously verified against standard electrical engineering formulas (such as standard NEMA sizing, IEC 60076 parameters, and thermal calculations), local site variances, harmonic conditions, and manufacturer-specific equipment criteria may significantly impact real-world parameters.</p>
+                </div>
+
+                <div>
+                    <h4 style="color: #0b1320; margin: 0 0 0.4rem 0; font-size: 1rem; font-weight: 700;">3. Field Verification Mandatory</h4>
+                    <p style="margin: 0;">Users are strictly advised to manually cross-check all application outputs against official engineering codes, datasheets, and physical field measurement inputs before executing physical procurement, sizing hardware configurations, or launching equipment installations.</p>
+                </div>
+            </div>
+
+            <!-- Modal Bottom Sticky Control Confirmation Footer Bar -->
+            <div style="background-color: #f8fafc; padding: 1rem 1.5rem; border-top: 1px solid #e2e8f0; display: flex; justify-content: flex-end;">
+                <button onclick="closeDisclaimerModal()" style="background-color: #0b1320; color: #ffffff; border: none; padding: 0.6rem 1.5rem; font-size: 0.9rem; font-weight: 600; border-radius: 6px; cursor: pointer; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">Acknowledge & Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ⚙️ JavaScript Modal Interface Visibility Toggles -->
+    <script>
+        function openDisclaimerModal() {
+            const modal = document.getElementById('disclaimer-modal');
+            if (modal) {
+                modal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            }
+        }
+        function closeDisclaimerModal() {
+            const modal = document.getElementById('disclaimer-modal');
+            if (modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        }
+    </script>
+
+    <!-- ========================================== -->
+    <!-- 🇺🇸 NEMA COMPLIANCE POPOUT BOX               -->
+    <!-- ========================================== -->
+    <div id="nema-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(11, 19, 32, 0.85); z-index: 99999; backdrop-filter: blur(8px); align-items: center; justify-content: center; padding: 1.5rem; box-sizing: border-box;">
+        <div style="background-color: #ffffff; color: #334155; width: 100%; max-width: 600px; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); display: flex; flex-direction: column; overflow: hidden; font-family: system-ui, sans-serif;">
+            
+            <!-- Header -->
+            <div style="background-color: #0b1320; color: #ffffff; padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="margin: 0; font-size: 1.1rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;">🇺🇸 NEMA Design Compliance Criteria</h3>
+                <button onclick="closeNemaModal()" style="background: transparent; border: none; color: #94a3b8; font-size: 1.5rem; cursor: pointer; font-weight: 300;">&times;</button>
+            </div>
+            
+            <!-- Content Space -->
+            <div style="padding: 2rem; font-size: 0.95rem; line-height: 1.6; display: flex; flex-direction: column; gap: 1.2rem;">
+                <p style="margin: 0;">Our digital application suite incorporates standardized industrial sizing parameters, equipment capacity matching scales, and overcurrent validation safety boundaries recognized across North American manufacturing and distribution frameworks (<strong>NEMA, ANSI, and NEC</strong>).</p>
+                
+                <p style="margin: 0;">To protect physical grid configurations and upstream hardware assets, loading matrices automatically integrate continuous-duty thermal safety limits. These algorithms cross-reference calculations against commercial equipment step increments, ensuring that all analytical outputs map directly to buildable, real-world engineering selection guidelines.</p>
+            </div>
+            
+            <!-- Footer Controls -->
+            <div style="background-color: #f8fafc; padding: 1rem 1.5rem; border-top: 1px solid #e2e8f0; display: flex; justify-content: flex-end;">
+                <button onclick="closeNemaModal()" style="background-color: #0b1320; color: #ffffff; border: none; padding: 0.6rem 1.5rem; font-size: 0.9rem; font-weight: 600; border-radius: 6px; cursor: pointer;">Close Reference</button>
+            </div>
+        </div>
+    </div>
+
+        <!-- ========================================== -->
+        <!-- 🇪🇺 IEC REGULATIONS POPOUT BOX             -->
+        <!-- ========================================== -->
+        <div id="iec-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(11, 19, 32, 0.85); z-index: 99999; backdrop-filter: blur(8px); align-items: center; justify-content: center; padding: 1.5rem; box-sizing: border-box;">
+            <div style="background-color: #ffffff; color: #334155; width: 100%; max-width: 600px; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); display: flex; flex-direction: column; overflow: hidden; font-family: system-ui, sans-serif;">
+                
+                <!-- Header -->
+                <div style="background-color: #0b1320; color: #ffffff; padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="margin: 0; font-size: 1.1rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;">🇪🇺 Global Design Compliance Criteria</h3>
+                    <button onclick="closeIecModal()" style="background: transparent; border: none; color: #94a3b8; font-size: 1.5rem; cursor: pointer; font-weight: 300;">&times;</button>
+                </div>
+                
+                <!-- Content Space -->
+                <div style="padding: 2rem; font-size: 0.95rem; line-height: 1.6; display: flex; flex-direction: column; gap: 1.2rem;">
+                    <p style="margin: 0;">For international networks, our computational utility engines conform to the universal electrical energy laws, network impedance calculations, and system verification protocols governed by the <strong>International Electrotechnical Commission (IEC)</strong>.</p>
+                    
+                    <p style="margin: 0;">Our analytical calculation frameworks strictly mirror standard industrial quality procedures derived from the latest international software lifecycle benchmarks. The core computational engines isolate fixed structural losses from variable load tracking to ensure highly accurate, submission-ready calculations that adhere directly to best industry practices.</p>
+                </div>
+                
+                <!-- Footer Controls -->
+                <div style="background-color: #f8fafc; padding: 1rem 1.5rem; border-top: 1px solid #e2e8f0; display: flex; justify-content: flex-end;">
+                    <button onclick="closeIecModal()" style="background-color: #0b1320; color: #ffffff; border: none; padding: 0.6rem 1.5rem; font-size: 0.9rem; font-weight: 600; border-radius: 6px; cursor: pointer;">Close Reference</button>
+                </div>
+            </div>
+        </div>
+
+    <!-- ⚙️ JavaScript Toggles for Reference Sheets -->
+    <script>
+        function openNemaModal() { document.getElementById('nema-modal').style.display = 'flex'; document.body.style.overflow = 'hidden'; }
+        function closeNemaModal() { document.getElementById('nema-modal').style.display = 'none'; document.body.style.overflow = 'auto'; }
+        function openIecModal() { document.getElementById('iec-modal').style.display = 'flex'; document.body.style.overflow = 'hidden'; }
+        function closeIecModal() { document.getElementById('iec-modal').style.display = 'none'; document.body.style.overflow = 'auto'; }
+    </script>
+
+    <!-- ========================================== -->
+    <!-- 🏆 QUALITY POLICY INTERACTIVE MODAL OVERLAY -->
+    <!-- ========================================== -->
+    <div id="quality-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(11, 19, 32, 0.85); z-index: 99999; backdrop-filter: blur(8px); align-items: center; justify-content: center; padding: 1.5rem; box-sizing: border-box;">
+        <div style="background-color: #ffffff; color: #334155; width: 100%; max-width: 650px; max-height: 80vh; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); display: flex; flex-direction: column; overflow: hidden; font-family: system-ui, -apple-system, sans-serif;">
+            
+            <!-- Modal Top Header Bar -->
+            <div style="background-color: #0b1320; color: #ffffff; padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="margin: 0; font-size: 1.1rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;">Quality Policy</h3>
+                <button onclick="closeQualityModal()" style="background: transparent; border: none; color: #94a3b8; font-size: 1.5rem; cursor: pointer; font-weight: 300; transition: color 0.2s;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='#94a3b8'">&times;</button>
+            </div>
+
+            <!-- Scrollable Policy Content Workspace -->
+            <div style="padding: 1.5rem; overflow-y: auto; font-size: 0.95rem; line-height: 1.6; display: flex; flex-direction: column; gap: 1.2rem;">
+                <p style="margin: 0; color: #64748b; font-size: 0.85rem; font-weight: 600;">Last Modified: August 2026</p>
+                <p style="margin: 0;">At <strong>maloymiao.com</strong>, we are committed to delivering highly accurate, leading-edge engineering software utilities and automated calculation workflows to the technical community. Our software design culture centers on quality, precision, and reliable digital deployment.</p>
+                
+                <div>
+                    <h4 style="color: #0b1320; margin: 0 0 0.4rem 0; font-size: 1rem; font-weight: 700;">1. System Calibration & Core Accuracy</h4>
+                    <p style="margin: 0;">The formulas, coefficients, and mathematical code blocks driving our calculation panels are derived straight from the latest industrial standards and peer-reviewed power criteria. We prioritize algorithm verification to eliminate manual data processing flaws.</p>
+                </div>
+
+                <div>
+                    <h4 style="color: #0b1320; margin: 0 0 0.4rem 0; font-size: 1rem; font-weight: 700;">2. Lifecycle Verification & Maintenance</h4>
+                    <p style="margin: 0;">Our applications undergo meticulous interface testing, variable parameter stress-checks, and code layout reviews throughout their development lifecycle. Systems are consistently updated via cloud commits to maintain compatibility with modern mobile and desktop viewports.</p>
+                </div>
+
+                <div>
+                    <h4 style="color: #0b1320; margin: 0 0 0.4rem 0; font-size: 1rem; font-weight: 700;">3. Continuous Improvement Feedback Loop</h4>
+                    <p style="margin: 0;">We leverage developer audits, peer code analysis, and user intake metrics to continuously improve the functional capabilities, processing speed, and user experience of our responsive engineering dashboards.</p>
+                </div>
+            </div>
+
+            <!-- Modal Bottom Sticky Control Confirmation Footer Bar -->
+            <div style="background-color: #f8fafc; padding: 1rem 1.5rem; border-top: 1px solid #e2e8f0; display: flex; justify-content: flex-end;">
+                <button onclick="closeQualityModal()" style="background-color: #0b1320; color: #ffffff; border: none; padding: 0.6rem 1.5rem; font-size: 0.9rem; font-weight: 600; border-radius: 6px; cursor: pointer; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">Close Policy</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ⚙️ JavaScript Quality Modal Interface Visibility Toggles -->
+    <script>
+        function openQualityModal() {
+            const modal = document.getElementById('quality-modal');
+            if (modal) {
+                modal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            }
+        }
+        function closeQualityModal() {
+            const modal = document.getElementById('quality-modal');
+            if (modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        }
+    </script>
+
+    <!-- ========================================== -->
+    <!-- 🛡️ SECURITY POLICY INTERACTIVE MODAL OVERLAY -->
+    <!-- ========================================== -->
+    <div id="security-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(11, 19, 32, 0.85); z-index: 99999; backdrop-filter: blur(8px); align-items: center; justify-content: center; padding: 1.5rem; box-sizing: border-box;">
+        <div style="background-color: #ffffff; color: #334155; width: 100%; max-width: 650px; max-height: 80vh; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); display: flex; flex-direction: column; overflow: hidden; font-family: system-ui, -apple-system, sans-serif;">
+            
+            <!-- Modal Top Header Bar -->
+            <div style="background-color: #0b1320; color: #ffffff; padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="margin: 0; font-size: 1.1rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;">Security Policy</h3>
+                <button onclick="closeSecurityModal()" style="background: transparent; border: none; color: #94a3b8; font-size: 1.5rem; cursor: pointer; font-weight: 300; transition: color 0.2s;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='#94a3b8'">&times;</button>
+            </div>
+
+            <!-- Scrollable Security Content Workspace -->
+            <div style="padding: 1.5rem; overflow-y: auto; font-size: 0.95rem; line-height: 1.6; display: flex; flex-direction: column; gap: 1.2rem;">
+                <p style="margin: 0; color: #64748b; font-size: 0.85rem; font-weight: 600;">Last Modified: August 2026</p>
+                <p style="margin: 0;">At <strong>maloymiao.com</strong>, protecting the integrity of our calculation algorithms and securing data exchanges is a critical design baseline. This statement details our active frontend platform hardening measures.</p>
+                
+                <div>
+                    <h4 style="color: #0b1320; margin: 0 0 0.4rem 0; font-size: 1rem; font-weight: 700;">1. End-to-End Transport Encryption</h4>
+                    <p style="margin: 0;">Our entire domain structure enforcement operates strictly over <strong>HTTPS (Hypertext Transfer Protocol Secure)</strong> utilizing standard SHA-256 SSL/TLS network handshake protocols. This prevents malicious data sniffing, interception vectors, or cross-site scripting vulnerabilities across physical public networks.</p>
+                </div>
+
+                <div>
+                    <h4 style="color: #0b1320; margin: 0 0 0.4rem 0; font-size: 1rem; font-weight: 700;">2. Sandbox Computational Execution</h4>
+                    <p style="margin: 0;">All computational matrix logic models (such as sizing algorithms or thermal calculations) execute safely inside your local client-side browser engine sandbox. No calculated technical values or system profiles are stored or cached on our cloud servers.</p>
+                </div>
+
+                <div>
+                    <h4 style="color: #0b1320; margin: 0 0 0.4rem 0; font-size: 1rem; font-weight: 700;">3. Hardened Service Worker Operations</h4>
+                    <p style="margin: 0;">Our Progressive Web Application (PWA) cache nodes and offline background assets are governed strictly via secure local service worker scripts. Script resources are isolated to prevent cross-origin injection anomalies or directory file modification threats.</p>
+                </div>
+            </div>
+
+            <!-- Modal Bottom Sticky Control Confirmation Footer Bar -->
+            <div style="background-color: #f8fafc; padding: 1rem 1.5rem; border-top: 1px solid #e2e8f0; display: flex; justify-content: flex-end;">
+                <button onclick="closeSecurityModal()" style="background-color: #0b1320; color: #ffffff; border: none; padding: 0.6rem 1.5rem; font-size: 0.9rem; font-weight: 600; border-radius: 6px; cursor: pointer; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">Close Policy</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ⚙️ JavaScript Security Modal Interface Visibility Toggles -->
+    <script>
+        function openSecurityModal() {
+            const modal = document.getElementById('security-modal');
+            if (modal) {
+                modal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            }
+        }
+        function closeSecurityModal() {
+            const modal = document.getElementById('security-modal');
+            if (modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        }
+    </script>
+
+    <!-- ========================================== -->
+    <!-- 📝 TRADEMARK & COPYRIGHT MODAL OVERLAY     -->
+    <!-- ========================================== -->
+    <div id="copyright-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(11, 19, 32, 0.85); z-index: 99999; backdrop-filter: blur(8px); align-items: center; justify-content: center; padding: 1.5rem; box-sizing: border-box;">
+        <div style="background-color: #ffffff; color: #334155; width: 100%; max-width: 650px; max-height: 80vh; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); display: flex; flex-direction: column; overflow: hidden; font-family: system-ui, -apple-system, sans-serif;">
+            
+            <!-- Modal Top Header Bar -->
+            <div style="background-color: #0b1320; color: #ffffff; padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="margin: 0; font-size: 1.1rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;">Trademark & Copyright</h3>
+                <button onclick="closeCopyrightModal()" style="background: transparent; border: none; color: #94a3b8; font-size: 1.5rem; cursor: pointer; font-weight: 300; transition: color 0.2s;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='#94a3b8'">&times;</button>
+            </div>
+
+            <!-- Scrollable Copyright Content Workspace -->
+            <div style="padding: 1.5rem; overflow-y: auto; font-size: 0.95rem; line-height: 1.6; display: flex; flex-direction: column; gap: 1.2rem;">
+                <p style="margin: 0; color: #64748b; font-size: 0.85rem; font-weight: 600;">Last Modified: August 2026</p>
+                <p style="margin: 0;">This statement outlines the ownership rights, branding guidelines, and intellectual property protections enforced across the <strong>maloymiao.com</strong> platform.</p>
+                
+                <div>
+                    <h4 style="color: #0b1320; margin: 0 0 0.4rem 0; font-size: 1rem; font-weight: 700;">1. Proprietary Source Code & Calculators</h4>
+                    <p style="margin: 0;">All core frontend code sheets, custom CSS interface modules, layout alignments, and mathematical JavaScript script formulas used to power our engineering application suites are the exclusive intellectual property of maloymiao. Unauthorized cloning, redistribution, or modification of these files is strictly prohibited.</p>
+                </div>
+
+                <div>
+                    <h4 style="color: #0b1320; margin: 0 0 0.4rem 0; font-size: 1rem; font-weight: 700;">2. Brand Identity & Trademarks</h4>
+                    <p style="margin: 0;">The name logos, design asset themes, application card presentation graphics, and unique digital portfolio frameworks constitute proprietary trade dress elements. They may not be utilized in connection with any third-party commercial software product or engineering presentation without express written authorization.</p>
+                </div>
+
+                <div>
+                    <h4 style="color: #0b1320; margin: 0 0 0.4rem 0; font-size: 1rem; font-weight: 700;">3. Third-Party Standards Citations</h4>
+                    <p style="margin: 0;">All references to external engineering codes (such as NEMA, ANSI, IEC, or NEC) are cited strictly for informational design alignment purposes. All respective rights, acronym marks, and standardized documentation titles remain the property of their respective international governing authorities.</p>
+                </div>
+            </div>
+
+            <!-- Modal Bottom Sticky Control Confirmation Footer Bar -->
+            <div style="background-color: #f8fafc; padding: 1rem 1.5rem; border-top: 1px solid #e2e8f0; display: flex; justify-content: flex-end;">
+                <button onclick="closeCopyrightModal()" style="background-color: #0b1320; color: #ffffff; border: none; padding: 0.6rem 1.5rem; font-size: 0.9rem; font-weight: 600; border-radius: 6px; cursor: pointer; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">Close Statement</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ⚙️ JavaScript Copyright Modal Interface Visibility Toggles -->
+    <script>
+        function openCopyrightModal() {
+            const modal = document.getElementById('copyright-modal');
+            if (modal) {
+                modal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            }
+        }
+        function closeCopyrightModal() {
+            const modal = document.getElementById('copyright-modal');
+            if (modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        }
+    </script>
+
 </body>
 </html>
